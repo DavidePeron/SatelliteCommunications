@@ -1,28 +1,31 @@
 clear all;
 close all;
-%% Constant parameters
-mu = 3.986004418e14; %Kepler constant [m^3/s^2]
-re = 6377000; %Earth radius [m] 
-Go = 1.727564365843028; % (rad) Distance in rad of Greenwich meridian from vernal equinox (X-axis)
-n_rev =2; %Number of revolutions
-runspeed = 300;
-omega_earth = 7.292115855377074e-005; % (rad/sec) 
-El = 15; %Elevation in degrees
-%% Some parameters about orbits
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% TUNDRA %%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-inc = deg2rad(63.4); %inclination
-T = 86400; %period in sec (86400s = 24h)
-a = 42164000; % altitude [m]
-e = 0.25; %Eccentricity
-w = deg2rad(270); %Argument of perigee [deg]
-raan = deg2rad(280); %Right ascension of the ascending node [deg]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% EARTH'S CONSTANTS USED IN THIS SIMULATOR
+% mu: Kepler constant [m^3/s^2]
+% re: Earth radius [m]
+% Go: Distance in of Greenwich meridian from vernal equinox (X-axis) [rad]
+% omega_earth: Angular velocity of the earth [rad/sec]
+% a_WGS84: Major semi-axis of the earth modelled as the ellipsoid WGS84
+% e_WGS84: Parameter of the earth modelled as the ellipsoid WGS84
+% b: Minor semi-axis of the earth modelled as the ellipsoid WGS84
+% ep: Parameter of the earth modelled as the ellipsoid WGS84
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+load('earth_constants.mat');
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% MOLNIYA %%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ORBIT'S CONSTANTS
+% inc: inclination of the orbit [rad]
+% T: orbital period [s]
+% a: altitude measured from the center of the earth [m]
+% e: orbit's eccentricity
+% w: argument of the perigee [rad]
+% raan: Right Ascension of the ascending node [rad]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+load('tundra.mat');
+
+%%%%%% To create a personalized orbit, decomment the following code %%%%%%%
 % inc = deg2rad(63.4); %inclination
 % T = 43200; %period in sec (86400s = 24h)
 % a = 26556000; % altitude [m]
@@ -30,27 +33,20 @@ raan = deg2rad(280); %Right ascension of the ascending node [deg]
 % w = deg2rad(270); %Argument of perigee [deg]
 % raan = deg2rad(30); %Right ascension of the ascending node [deg]
 
-%WGS84 ellipsoid constants
-a_WGS84 = 6378137;
-e_WGS84 = 8.1819190842622e-2;
-b = sqrt(a_WGS84^2*(1-e_WGS84^2)); %Semi-minor axis
-ep = sqrt((a_WGS84^2 - b^2)/b^2); %
-
-eta_0 = 2*pi/T; %Angular velocity of the fictitious satellite (rad/sec)
-
-%Initial position (focal distance)
-phi = 0:0.01:2*pi;
-r = zeros(1,length(phi));
-r(1,:) = a*(1-e^2)./(1+e*cos(phi(1,:))); % r(phi) position of the satellite along the orbit
-
-t = 0:runspeed:T*n_rev; % time [s]
-t_p = 0:T:T*n_rev; % time at perigee pass at each cycle
+% Simulation parameters
+n_rev =2; %Number of revolutions
+runspeed = 300; % Speed of the simulation
+El = 15; %Minimum elevation in degrees
+eta_0 = 2*pi/T; %Angular velocity of the fictitious satellite [rad/sec]
 
 %Transformation Matrix from orbital to ECI Coordinates
 
 orbital_to_ECI = [cos(raan)*cos(w) - sin(raan)*cos(inc)*sin(w), -cos(raan)*sin(w) - sin(raan)*cos(inc)*cos(w), sin(raan)*sin(inc);
      sin(raan)*cos(w) + cos(raan)*cos(inc)*sin(w), -sin(raan)*sin(w) + cos(raan)*cos(inc)*cos(w), -cos(raan)*sin(inc);
      sin(inc)*sin(w), sin(inc)*cos(w), cos(inc)];
+
+t = 0:runspeed:T*n_rev; % time [s]
+t_p = 0:T:T*n_rev; % time at perigee pass at each cycle
 
 % Compute Mean Anomaly and Eccentric Anomaly
 M = zeros(1,length(t));
@@ -103,11 +99,7 @@ JD = 2415020 + 365*(A - 1900) + DTA + NAB1900 + TU/24 - 0.5;
 T_c = (JD - 2415020)/36525;
 alpha_go = 99.6909833 + 36000.7689*T_c + 3.8708e-4*T_c^2;
 
-%Number of Days since Jan 1, 2000
-% J2000_days=155727/24; % = 4th October, 2017 http://www.timeanddate.com/counters/year2000.html
-equat_rad=6378137.00;
-polar_rad=6356752.3142;
-[xx yy zz]=ellipsoid (0,0,0,equat_rad, equat_rad, polar_rad);
+[xx yy zz]=ellipsoid (0,0,0,a_WGS84, a_WGS84, b);
 load('topo.mat','topo','topomap1');
 topo2 = [topo(:,181:360) topo(:,1:180)];
 pro.FaceColor= 'texture';
@@ -129,22 +121,14 @@ line([0 lim],[0 0],[0 0],'Color', 'black', 'Marker','.','LineStyle','-')
 line([0 0],[0 lim],[0 0],'Color', 'black', 'Marker','.','LineStyle','-')
 line([0 0],[0 0],[0 lim],'Color', 'black', 'Marker','.','LineStyle','-')
 
-% %Plotting the initial poisition of the satellite
-% plot3 (ECI_coord(1,1), ECI_coord(2,1), ECI_coord(3,1),'o', 'MarkerEdgeColor', 'black','MarkerFaceColor','green','MarkerSize', 10);
-% 
-% %Plotting Initial Velocity Vector
-% line([ECI_coord(1,1) ECI_coord(1,1)+ECI_velocity(1,1)],[ECI_coord(2,1) ECI_coord(2,1)+ECI_velocity(3,1)],[ECI_coord(3,1) ECI_coord(3,1)+ECI_velocity(4,1)],'Color', 'red','Marker','.','LineWidth', 1.5, 'MarkerSize', 8,'LineStyle','-');
 
 %% DRAWING THE DYNAMIC VISUALIZATION COMPONENTS%
-
-%  sphere_position = cell(1,length(t)); %1,length(t)
-%  position = cell(1,length(t)); %1,length(t)
 
 for i = 1:length(t)
 
     flag = 0;
     %Mean Anomaly
-    M(1,i) = eta_0*(t(i) - t_p(1,floor(t(i)/T)+1));
+    M(i) = eta_0*(t(i) - t_p(1,floor(t(i)/T)+1));
     
     % Computation of Eccentric Anomaly with Newton-Raphson Method
     E(i) = pi;
@@ -199,7 +183,7 @@ for i = 1:length(t)
     ECEF_coord(:,i) = ECI_to_ECEF*ECI_coord(:,i);
     
     % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % Transformation to LLA with formulas from slides does not work !!!
+    % Transformation from ECEF to LLA
     % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     p = sqrt(ECEF_coord(1,i).^2 + ECEF_coord(2,i).^2);
     th = atan2(a_WGS84*ECEF_coord(3,i), b*p); %theta
@@ -212,8 +196,12 @@ for i = 1:length(t)
     long(i) = rad2deg(long(i));
     lat(i) = rad2deg(lat(i));
 
-    %return long in [0,360] range
-    long(i) = mod(long(i),360);
+    %return long in [0,360] range and remove 360 to longitude higher then
+    %180, to have West coordinates
+     long(i) = mod(long(i),360);
+     if long(i) > 180
+         long(i) = long(i) - 360;
+     end
     
     %Pause
     pause (0.01);
@@ -221,28 +209,24 @@ for i = 1:length(t)
 end
 
 %% Ground Track
-
-perigee=a*(1-e);
-apogee=a*(1+e);
-altitude_low=(perigee-re)/1000;
-altitude_high=(apogee-re)/1000;
-
-if altitude_low>200 && altitude_high<2000
-    'Low Earth Orbit'
-end
-if altitude_low>2000 && altitude_high<35786
-    'Middle Earth Orbit'
-end
-
 figure (2);
 set(gcf,'Menubar','none','Name','Earth Track', ... 
     'NumberTitle','off','Position',[10,350,1000,500]); 
 hold on
-image([0 360],[-90 90],topo,'CDataMapping', 'scaled');
-colormap(topomap1);
+earthmap = imread('planisphere1.jpeg');
+% earthmap = flip(earthmap,1);
+% earthmap = flip(earthmap,2);
+image([-180 180],[-90 90],earthmap,'CDataMapping', 'scaled');
+% image([-180 0],[-90 90],earthmap(:,181:360),'CDataMapping', 'scaled');
+% image([0 180],[-90 90],earthmap(:,1:180),'CDataMapping', 'scaled');
+% colormap(topomap1);
 axis equal
-axis ([0 360 -90 90]);
+axis ([-180 180 -90 90]);
+set(gca, 'XDir', 'reverse');
+
 h1 = plot(0,0,'o','Markersize',1);
+
+%% 
 
 %Ground Stations plot
 % plot (167.717,8.717,'o', 'MarkerEdgeColor', 'k','MarkerFaceColor','y','MarkerSize', 10);
@@ -341,8 +325,6 @@ relativephasing=sepsat/2; %relative phasing between satellites in adjacent plane
 GAMMA=rad2deg(acos(cos(gamma)/(cos(pi/s))));%hald of ground swath width
 alpha=GAMMA+rad2deg(gamma)%separation between orbital planes
 
-lat_deg = lat;
-long_deg = long;
 %% Azimuth estimation
 prompt = '\n Insert a latitude for the ground station: ';
 lat_gs = deg2rad(input(prompt));
@@ -350,43 +332,43 @@ prompt = '\n Insert a longitude between [-180; +180] for the ground station: ';
 long_gs = deg2rad(input(prompt));
 azimuth = zeros(1,length(t));
 elevation = zeros(1,length(t));
+
 % Save latitude and longitude in degree to future checks
+lat_deg = lat;
+long_deg = long;
 
 for i = 1:length(t)
-    if long(i) > 180
-        long(i) = long(i) - 360;
-    end
+
     long(i) = deg2rad(long(i));
     lat(i) = deg2rad(lat(i));
-%     L = long(i) - long_gs;
-%     cosine_phi = cos(L)*cos(lat_gs);
-%     a_az = asin(sin(L)/sin(cosine_phi));
-%     if lat(i) > 0 && L > 0
-%         azimuth(i) = 180 - rad2deg(a_az);
-%     end
-%     if lat(i) > 0 && L < 0
-%         azimuth(i) = 180 + rad2deg(a_az);
-%     end
-%     if lat(i) < 0 && L > 0
-%         azimuth(i) = rad2deg(a_az);
-%     end
-%     if lat(i) < 0 && L < 0
-%         azimuth(i) = 360 - rad2deg(a_az);
-%     end      
     cos_lambda = cos(lat_gs)*cos(lat(i))*cos(long_gs - long(i)) + sin(lat_gs)*sin(lat(i));
+    a_az = atan(tan(abs(long_gs - long(i)))/sin(lat_gs));
+    if lat(i) < lat_gs && long(i) < long_gs % South east
+        azimuth(i) = 180 - rad2deg(a_az);
+    end
+    if lat(i) < lat_gs && long(i) > long_gs % South west
+        azimuth(i) = 180 + rad2deg(a_az);
+    end
+    if lat(i) > lat_gs && long(i) < long_gs % North east
+        azimuth(i) = rad2deg(a_az);
+    end
+    if lat(i) > lat_gs && long(i) > long_gs % North west
+        azimuth(i) = 360 - rad2deg(a_az);
+    end      
+
     elevation(i) = rad2deg(acos(sin(acos(cos_lambda))/sqrt(1+(re/r_t(i))^2+2*re/r_t(i)*cos_lambda)));
 end
-% 
-% % %Plot of Azimuth 
-% % figure(9);
-% % set(gcf,'Menubar','default','Name','azimuth(t)'); 
-% % plot(t, azimuth);
-% % title('$$Azimuth(t)$$','interpreter','latex');
-% % xlabel('Time'); % x-axis label
-% % ylabel('Degree'); % y-axis label
-% 
+
+%Plot of Azimuth 
+figure(6);
+subplot(1,2,1); 
+plot(t, azimuth);
+title('$$Azimuth(t)$$','interpreter','latex');
+xlabel('Time'); % x-axis label
+ylabel('Degree'); % y-axis label
+
 %Plot of Elevation 
-subplot(2,2,4); 
+subplot(1,2,2); 
 plot(t, elevation);
 title('$$Elevation(t)$$','interpreter','latex');
 xlabel('Time'); % x-axis label
