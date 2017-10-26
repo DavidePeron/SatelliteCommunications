@@ -213,13 +213,8 @@ figure (2);
 set(gcf,'Menubar','none','Name','Earth Track', ... 
     'NumberTitle','off','Position',[70,30,1000,500]); 
 hold on
-earthmap = imread('planisphere1.jpeg');
-% earthmap = flip(earthmap,1);
-% earthmap = flip(earthmap,2);
-image([-180 180],[-90 90],earthmap,'CDataMapping', 'scaled');
-% image([-180 0],[-90 90],earthmap(:,181:360),'CDataMapping', 'scaled');
-% image([0 180],[-90 90],earthmap(:,1:180),'CDataMapping', 'scaled');
-% colormap(topomap1);
+earthmap = imread('planisphere2.jpg');
+image([180 -180],[90 -90],earthmap,'CDataMapping', 'scaled');
 axis equal
 axis ([-180 180 -90 90]);
 set(gca, 'XDir', 'reverse');
