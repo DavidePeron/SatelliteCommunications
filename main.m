@@ -36,7 +36,7 @@ load('tundra.mat');
 % Simulation parameters
 n_rev =1; %Number of revolutions
 runspeed = 300; % Speed of the simulation
-El = 15; %Minimum elevation in degrees
+El = 0; %Minimum elevation in degrees
 eta_0 = 2*pi/T; %Angular velocity of the fictitious satellite [rad/sec]
 
 %Transformation Matrix from orbital to ECI Coordinates
@@ -356,7 +356,13 @@ for i = 1:length(t)
     end    
     a_primo(i) = a_az;
     
-    elevation(i) = rad2deg(acos(sin(acos(cos_lambda))/sqrt(1+(re/r_t(i))^2+2*re/r_t(i)*cos_lambda)));
+    b = 1+(re/r_t(i))^2;
+    c = 2*re/r_t(i);
+    cos_gamma = (c*(cosd(El))^2+sqrt(c^2*(cosd(El))^4-4*b*(cosd(El))^2+4))/2;
+    gamma = acosd(cos_gamma);
+    if(lambda < gamma)
+        elevation(i) = rad2deg(acos(sin(acos(cos_lambda))/sqrt(1+(re/r_t(i))^2+2*re/r_t(i)*cos_lambda)));
+    end
 end
 
 %Plot of Azimuth 
@@ -373,13 +379,6 @@ grid on;
 subplot(1,2,2); 
 plot(t, elevation);
 title('$$Elevation(t)$$','interpreter','latex');
-xlabel('Time'); % x-axis label
-ylabel('Degree'); % y-axis label
-grid on;
-
-figure(7);
-plot(t,a_primo);
-title('$$A_{primo}(t)$$','interpreter','latex');
 xlabel('Time'); % x-axis label
 ylabel('Degree'); % y-axis label
 grid on;
