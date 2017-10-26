@@ -336,12 +336,22 @@ elevation = zeros(1,length(t));
 lat_deg = lat;
 long_deg = long;
 
+trial = zeros(1,length(t));
+trial2 = zeros(1,length(t));
+trial3 = zeros(1,length(t));
+lambda = zeros(1,length(t));
+sin_lambda = zeros(1,length(t));
+
 for i = 1:length(t)
 
     cos_lambda = cosd(lat_gs)*cosd(lat(i))*cosd(long_gs - long(i)) + sind(lat_gs)*sind(lat(i));
-    lambda = acosd(cos_lambda);
-    a_az = asind(sind(abs(long_gs - long(i)))*cosd(lat_gs)/sind(lambda));
+    lambda(i) = acosd(cos_lambda);
     
+    sin_lambda(i) = sind(lambda(i));
+    sin_aaz = sind(abs(long_gs - long(i)))*cosd(lat_gs)/sind(lambda(i));
+        if a_primo(i-1) >
+    end
+    a_az = asind(sind(abs(long_gs - long(i)))*cosd(lat_gs)/sind(lambda(i)));
     if lat(i) < lat_gs && long(i) < long_gs % South east
         azimuth(i) = 180 - a_az;
     end
@@ -355,8 +365,12 @@ for i = 1:length(t)
         azimuth(i) = 360 - a_az;
     end    
     a_primo(i) = a_az;
-    
+
     elevation(i) = rad2deg(acos(sin(acos(cos_lambda))/sqrt(1+(re/r_t(i))^2+2*re/r_t(i)*cos_lambda)));
+    
+    trial(i) = sind(abs(long_gs - long(i)))*cosd(lat_gs);
+    trial2(i) = sind(abs(long_gs - long(i)));
+    trial3(i) = abs(long_gs - long(i));
 end
 
 %Plot of Azimuth 
@@ -403,3 +417,15 @@ grid on;
 % % % 
 % % % cov = 2*radius; %actual double coverage for tundra orbit in the north part
 % % % n_orbits = ceil(200/cov);
+
+
+figure(8)
+plot(t,trial);
+hold on;
+plot(t,trial2);
+hold on;
+plot(t,trial3);
+hold on;
+plot(t,lambda);
+hold on;
+plot(t,sin_lambda);
