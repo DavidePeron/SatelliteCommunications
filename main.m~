@@ -338,22 +338,23 @@ long_deg = long;
 
 for i = 1:length(t)
 
-    cos_lambda = cosd(lat_gs)*cosd(lat(i))*cosd(long_gs - long(i)) + sind(lat_gs)*sind(lat(i));
-    lambda = acosd(cos_lambda);
-    a_az = asind(sind(abs(long_gs - long(i)))*cosd(lat_gs)/sind(lambda));
+    long(i) = deg2rad(long(i));
+    lat(i) = deg2rad(lat(i));
+    cos_lambda = cosd(lat_gs)*cos(lat(i))*cos(long_gs - long(i)) + sin(lat_gs)*sin(lat(i));
+    a_az = asin(tan(abs(long_gs - long(i)))/sin(lat_gs));
     if lat(i) < lat_gs && long(i) < long_gs % South east
-        azimuth(i) = 180 - a_az;
+        azimuth(i) = 180 - rad2deg(a_az);
     end
     if lat(i) < lat_gs && long(i) > long_gs % South west
-        azimuth(i) = 180 + a_az;
+        azimuth(i) = 180 + rad2deg(a_az);
     end
     if lat(i) > lat_gs && long(i) < long_gs % North east
-        azimuth(i) = a_az;
+        azimuth(i) = rad2deg(a_az);
     end
     if lat(i) > lat_gs && long(i) > long_gs % North west
-        azimuth(i) = 360 - a_az;
+        azimuth(i) = 360 - rad2deg(a_az);
     end    
-    a_primo(i) = a_az;
+    a_primo(i) = rad2deg(a_az);
 
     elevation(i) = rad2deg(acos(sin(acos(cos_lambda))/sqrt(1+(re/r_t(i))^2+2*re/r_t(i)*cos_lambda)));
 end
@@ -378,10 +379,9 @@ grid on;
 
 figure(7);
 plot(t,a_primo);
-title('$$A_{primo}(t)$$','interpreter','latex');
+title('$$A_primo(t)$$','interpreter','latex');
 xlabel('Time'); % x-axis label
 ylabel('Degree'); % y-axis label
-grid on;
 
 % % % pks = findpeaks(long_deg(1:ceil(length(long_deg)/2))); %pks = most eastern longitude
 % % % max_long = min(pks); %the smaller extreme in longitude
