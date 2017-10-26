@@ -34,7 +34,7 @@ load('tundra.mat');
 % raan = deg2rad(30); %Right ascension of the ascending node [deg]
 
 % Simulation parameters
-n_rev =2; %Number of revolutions
+n_rev =1; %Number of revolutions
 runspeed = 300; % Speed of the simulation
 El = 15; %Minimum elevation in degrees
 eta_0 = 2*pi/T; %Angular velocity of the fictitious satellite [rad/sec]
@@ -77,7 +77,7 @@ nadir = zeros(1,length(t));
 
 %Initializing the Drawing Space
 set(gcf,'Menubar','default','Name','Orbit Visualization', ... 
-    'NumberTitle','off','Position',[10,350,750,750]); 
+    'NumberTitle','off','Position',[70,10,750,750]); 
 lim=(1+e)*a;%Setting the limits of the graph
 clf
 axis([-lim, lim, -lim, lim, -lim, lim])	
@@ -211,7 +211,7 @@ end
 %% Ground Track
 figure (2);
 set(gcf,'Menubar','none','Name','Earth Track', ... 
-    'NumberTitle','off','Position',[10,350,1000,500]); 
+    'NumberTitle','off','Position',[70,30,1000,500]); 
 hold on
 earthmap = imread('planisphere1.jpeg');
 % earthmap = flip(earthmap,1);
@@ -282,6 +282,7 @@ plot(t, lat);
 title('Latitude(t)','interpreter','latex');
 xlabel('Time'); % x-axis label
 ylabel('Degree'); % y-axis label
+grid on;
 
 %Plot of longitude
 subplot(2,2,2);
@@ -289,6 +290,7 @@ plot(t, long);
 title('Longitude(t)','interpreter','latex');
 xlabel('Time'); % x-axis label
 ylabel('Degree'); % y-axis label
+grid on;
 % 
 % %Plot of Anomalies
 % figure(7);
@@ -305,6 +307,7 @@ plot(t, lambda);
 title('$$Central ~angle ~\lambda(t)$$','interpreter','latex');
 xlabel('Time'); % x-axis label
 ylabel('Degree'); % y-axis label
+grid on;
 
 %Time of visibility, max Angular Speed and Azimuth range [s]
 Tv=(T/pi)*acos(cos(deg2rad(max(lambda)))/cos(deg2rad(min(lambda))));
@@ -354,18 +357,21 @@ for i = 1:length(t)
     end
     if lat(i) > lat_gs && long(i) > long_gs % North west
         azimuth(i) = 360 - rad2deg(a_az);
-    end      
+    end    
+%     azimuth(i) = rad2deg(a_az);
 
     elevation(i) = rad2deg(acos(sin(acos(cos_lambda))/sqrt(1+(re/r_t(i))^2+2*re/r_t(i)*cos_lambda)));
 end
 
 %Plot of Azimuth 
 figure(6);
+set(gcf,'Menubar','default','Name','Azimuth and Elevation');
 subplot(1,2,1); 
 plot(t, azimuth);
 title('$$Azimuth(t)$$','interpreter','latex');
 xlabel('Time'); % x-axis label
 ylabel('Degree'); % y-axis label
+grid on;
 
 %Plot of Elevation 
 subplot(1,2,2); 
@@ -373,24 +379,25 @@ plot(t, elevation);
 title('$$Elevation(t)$$','interpreter','latex');
 xlabel('Time'); % x-axis label
 ylabel('Degree'); % y-axis label
+grid on;
 
-pks = findpeaks(long_deg(1:ceil(length(long_deg)/2))); %pks = most eastern longitude
-max_long = min(pks); %the smaller extreme in longitude
-locs = find(long_deg == max_long); %index of max_long in the long vector
-
-ext_lat = lat_deg(locs); %ext_lat = equivalent latitude at max_long
-lat_index = find(lat_deg == ext_lat); %lat_index = index of the most western longitude
-if lat_index(1) == locs
-    lat_locs = lat_index(2);
-else
-    lat_locs = lat_index(1);
-end
-min_long = long_deg(lat_locs); %most western longitude
-radius = lambda(locs); %radius of the circle of coverage for the max_long point
-rext_east = max_long + radius;
-lext_east = min_long + radius;
-semi_cov = abs(rext_east - lext_east);
-
-cov = 2*radius; %actual double coverage for tundra orbit in the north part
-n_orbits = ceil(200/cov);
+% % % pks = findpeaks(long_deg(1:ceil(length(long_deg)/2))); %pks = most eastern longitude
+% % % max_long = min(pks); %the smaller extreme in longitude
+% % % locs = find(long_deg == max_long); %index of max_long in the long vector
+% % % 
+% % % ext_lat = lat_deg(locs); %ext_lat = equivalent latitude at max_long
+% % % lat_index = find(lat_deg == ext_lat); %lat_index = index of the most western longitude
+% % % if lat_index(1) == locs
+% % %     lat_locs = lat_index(2);
+% % % else
+% % %     lat_locs = lat_index(1);
+% % % end
+% % % min_long = long_deg(lat_locs); %most western longitude
+% % % radius = lambda(locs); %radius of the circle of coverage for the max_long point
+% % % rext_east = max_long + radius;
+% % % lext_east = min_long + radius;
+% % % semi_cov = abs(rext_east - lext_east);
+% % % 
+% % % cov = 2*radius; %actual double coverage for tundra orbit in the north part
+% % % n_orbits = ceil(200/cov);
 
