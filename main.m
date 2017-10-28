@@ -76,6 +76,7 @@ nadir = zeros(1,length(t));
 %% Plot of the static components
 
 %Initializing the Drawing Space
+earthmap = imread('planisphere2.jpg');
 set(gcf,'Menubar','default','Name','Orbit Visualization', ... 
     'NumberTitle','off','Position',[70,10,750,750]); 
 lim=(1+e)*a;%Setting the limits of the graph
@@ -101,11 +102,13 @@ alpha_go = 99.6909833 + 36000.7689*T_c + 3.8708e-4*T_c^2;
 
 [xx yy zz]=ellipsoid (0,0,0,a_WGS84, a_WGS84, b);
 load('topo.mat','topo','topomap1');
-topo2 = [topo(:,181:360) topo(:,1:180)];
+% earthmap2 = [earthmap(:,181:360) earthmap(:,1:180)];
+earthmap2 = flip(earthmap,1);
+earthmap2 = flip(earthmap2,2);
 pro.FaceColor= 'texture';
 pro.EdgeColor = 'none';
 pro.FaceLighting = 'phong';
-pro.Cdata = topo2;
+pro.Cdata = earthmap2;
 earth= surface(xx,yy,zz,pro);
 colormap(topomap1);
 
@@ -114,7 +117,7 @@ Xaxis= line([-1e7 1e7],[0 0],[0 0],'Color', 'red', 'Marker','.','LineStyle','-')
 Yaxis= line([0 0],[-1e7 1e7],[0 0],'Color', 'red', 'Marker','.','LineStyle','-');
 rotate (Xaxis, [0 0 1], 0);
 rotate (Yaxis, [0 0 1], 0);
-Sun=light('Position',[1 0 0],'Style','infinite');
+% Sun=light('Position',[1 0 0],'Style','local');
 
 %Plotting the ECI Axes
 line([0 lim],[0 0],[0 0],'Color', 'black', 'Marker','.','LineStyle','-')
@@ -213,7 +216,6 @@ figure (2);
 set(gcf,'Menubar','none','Name','Earth Track', ... 
     'NumberTitle','off','Position',[70,30,1000,500]); 
 hold on
-earthmap = imread('planisphere2.jpg');
 image([180 -180],[90 -90],earthmap,'CDataMapping', 'scaled');
 axis equal
 axis ([-180 180 -90 90]);
