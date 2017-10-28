@@ -23,7 +23,7 @@ load('earth_constants.mat');
 % w: argument of the perigee [rad]
 % raan: Right Ascension of the ascending node [rad]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-load('tundra.mat');
+load('molniya.mat');
 
 %%%%%% To create a personalized orbit, decomment the following code %%%%%%%
 % inc = deg2rad(63.4); %inclination
@@ -34,10 +34,12 @@ load('tundra.mat');
 % raan = deg2rad(30); %Right ascension of the ascending node [deg]
 
 % Simulation parameters
-n_rev =1; %Number of revolutions
-runspeed = 300; % Speed of the simulation
+n_rev =2; %Number of revolutions
+runspeed = 200; % Speed of the simulation
 El = 0; %Minimum elevation in degrees
 eta_0 = 2*pi/T; %Angular velocity of the fictitious satellite [rad/sec]
+n_sat = 3;
+color = ['r','g','c','y','w'];
 
 %Transformation Matrix from orbital to ECI Coordinates
 
@@ -101,8 +103,6 @@ T_c = (JD - 2415020)/36525;
 alpha_go = 99.6909833 + 36000.7689*T_c + 3.8708e-4*T_c^2;
 
 [xx yy zz]=ellipsoid (0,0,0,a_WGS84, a_WGS84, b);
-load('topo.mat','topo','topomap1');
-% earthmap2 = [earthmap(:,181:360) earthmap(:,1:180)];
 earthmap2 = flip(earthmap,1);
 earthmap2 = flip(earthmap2,2);
 pro.FaceColor= 'texture';
@@ -110,14 +110,13 @@ pro.EdgeColor = 'none';
 pro.FaceLighting = 'phong';
 pro.Cdata = earthmap2;
 earth= surface(xx,yy,zz,pro);
-colormap(topomap1);
 
 rotate (earth, [0 0 1], 0);
 Xaxis= line([-1e7 1e7],[0 0],[0 0],'Color', 'red', 'Marker','.','LineStyle','-');
 Yaxis= line([0 0],[-1e7 1e7],[0 0],'Color', 'red', 'Marker','.','LineStyle','-');
 rotate (Xaxis, [0 0 1], 0);
 rotate (Yaxis, [0 0 1], 0);
-% Sun=light('Position',[1 0 0],'Style','local');
+% Sun=light('Position',[1 0 0],'Style','infinite');
 
 %Plotting the ECI Axes
 line([0 lim],[0 0],[0 0],'Color', 'black', 'Marker','.','LineStyle','-')
@@ -125,7 +124,7 @@ line([0 0],[0 lim],[0 0],'Color', 'black', 'Marker','.','LineStyle','-')
 line([0 0],[0 0],[0 lim],'Color', 'black', 'Marker','.','LineStyle','-')
 
 
-%% DRAWING THE DYNAMIC VISUALIZATION COMPONENTS%
+%% COMPUTATION OF THE TRAJECTORY%
 
 for i = 1:length(t)
 
@@ -159,22 +158,6 @@ for i = 1:length(t)
     y_0(i) = r_t(i)* sin(phi_t(i));
     ECI_coord(:,i) = orbital_to_ECI*[x_0(i); y_0(i); z_0(i)];
     
-    rotate (earth, [0 0 1], (360/length(t)), [0,0,0]);
-    rotate (Xaxis, [0 0 1], (360/length(t)), [0,0,0]);
-    rotate (Yaxis, [0 0 1], (360/length(t)), [0,0,0]);
-
-    %Drawing the red sphere
-    sphere_position(i)=plot3 (ECI_coord(1,i), ECI_coord(2,i), ECI_coord(3,i),'o', 'MarkerEdgeColor', 'k','MarkerFaceColor','r','MarkerSize', 6);
-    position(i)=line([0 ECI_coord(1,i)],[0 ECI_coord(2,i)], [0 ECI_coord(3,i)],'Color', 'yellow', 'LineWidth', 2);
-    
-    if(i~=1)
-        set (sphere_position(i-1), 'Visible', 'off');
-        set (position(i-1), 'Visible', 'off');
-    end
-    if (i~=1 && i<=length(t))
-        line([ECI_coord(1,i-1) ECI_coord(1,i)],[ECI_coord(2,i-1) ECI_coord(2,i)], [ECI_coord(3,i-1) ECI_coord(3,i)],'Color', 'black', 'LineWidth', 1.5);
-    end
-    
     %Compute ECEF Coordinates
     %Transformation Matrix from ECI to ECEF Coordinates
 
@@ -205,10 +188,47 @@ for i = 1:length(t)
      if long(i) > 180
          long(i) = long(i) - 360;
      end
+end
+
+%% Shifting of the array for multiple satellite
+ECI = cell(n_sat);
+long_cell = cell(n_sat);
+lat_cell = cell(n_sat);
+h1 = cell(n_sat);
+for i=0:n_sat-1
+    ECI{i+1} = circshift(ECI_coord,T./n_sat*i,2);
+    long_cell{i+1} = circshift(long,T./n_sat*i,2);
+    lat_cell{i+1} = circshift(lat,T./n_sat*i,2);
+    h1{i+1} = plot(0,0,'o','Markersize',1);
+end
+
+%% 3-D ANIMATION
+
+sphere_position = cell(n_sat);
+position = cell(n_sat);
+
+for i=1:length(t)
+    rotate (earth, [0 0 1], (360/length(t)), [0,0,0]);
+    rotate (Xaxis, [0 0 1], (360/length(t)), [0,0,0]);
+    rotate (Yaxis, [0 0 1], (360/length(t)), [0,0,0]);
+
+    %Drawing the red sphere
+    for j=1:n_sat
+        %Drawing the red sphere
+        sphere_position{j}(i)=plot3 (ECI{j}(1,i), ECI{j}(2,i), ECI{j}(3,i),'o', 'MarkerEdgeColor', 'k','MarkerFaceColor',color(j),'MarkerSize', 6);
+        position{j}(i)=line([0 ECI{j}(1,i)],[0 ECI{j}(2,i)], [0 ECI{j}(3,i)],'Color', color(j), 'LineWidth', 2);
+        
+        if(i~=1)
+            set (sphere_position{j}(i-1), 'Visible', 'off');
+            set (position{j}(i-1), 'Visible', 'off');
+        end
+        
+        if (i~=1 && i<=length(t))
+            line([ECI{j}(1,i-1) ECI{j}(1,i)],[ECI{j}(2,i-1) ECI{j}(2,i)], [ECI{j}(3,i-1) ECI{j}(3,i)],'Color', 'black', 'LineWidth', 1.5);
+        end
+    end
     
-    %Pause
     pause (0.01);
-    
 end
 
 %% Ground Track
@@ -221,7 +241,6 @@ axis equal
 axis ([-180 180 -90 90]);
 set(gca, 'XDir', 'reverse');
 
-h1 = plot(0,0,'o','Markersize',1);
 
 %% 
 
@@ -229,10 +248,6 @@ h1 = plot(0,0,'o','Markersize',1);
 % plot (167.717,8.717,'o', 'MarkerEdgeColor', 'k','MarkerFaceColor','y','MarkerSize', 10);
 % plot (360-76.496, 42.440,'o', 'MarkerEdgeColor', 'k','MarkerFaceColor','y','MarkerSize', 10);
 for i=1:length(t)
-    plot (long(i),lat(i),'o', 'MarkerEdgeColor', 'k','MarkerFaceColor','r','MarkerSize', 2);
-    if (i~=1 && abs(long(i-1)-long(i))<100)
-        line([long(i-1) long(i)],[lat(i-1) lat(i)],'Color', 'red', 'LineWidth', 2);
-    end
     
     %% Nadir angle estimation
     rho(i) = asin(re/r_t(i));
@@ -249,15 +264,21 @@ for i=1:length(t)
     %Finding the LLA coordinates of the extreme position of a user
     %We consider positive angles towards east and north and negative ones 
     %towards west and south; 
-    elong_ext(i) = (long(i) + lambda(i)) - 360*floor((long(i) + lambda(i))/360);
-    wlong_ext(i) = (long(i) - lambda(i));
-    nlat_ext(i) = (lat(i) + lambda(i)); %- 90*floor(lat(i)+lambda(i)/90);
-    slat_ext(i) = lat(i) - lambda(i);
+    elong_ext(i) = (long_cell{1}(i) + lambda(i)) - 360*floor((long_cell{1}(i) + lambda(i))/360);
+    wlong_ext(i) = (long_cell{1}(i) - lambda(i));
+    nlat_ext(i) = (lat_cell{1}(i) + lambda(i)); %- 90*floor(lat(i)+lambda(i)/90);
+    slat_ext(i) = lat_cell{1}(i) - lambda(i);
     
-    delete(h1);
-    h1 = plot(long(i),lat(i),'o','Markersize',lambda(i)*2);
+    for j=1:n_sat
+        plot (long_cell{j}(i),lat_cell{j}(i),'o', 'MarkerEdgeColor', 'k','MarkerFaceColor',color(j),'MarkerSize', 2);
+        if (i~=1 && abs(long_cell{j}(i-1)-long_cell{j}(i))<100)
+            line([long_cell{j}(i-1) long_cell{j}(i)],[lat_cell{j}(i-1) lat_cell{j}(i)],'Color', color(j), 'LineWidth', 2);
+        end
+        delete(h1{j});
+        h1{j} = plot(long_cell{j}(i),lat_cell{j}(i),'o','MarkerEdgeColor',color(j), 'Markersize', lambda(i)*2);
+    end
     
-    pause (0.001);
+    pause (0.01);
 end
 
 %% 
@@ -275,7 +296,7 @@ end
 figure(5);
 set(gcf,'Menubar','default','Name','LLA Coordinates and Parameters'); 
 subplot(2,2,1);
-plot(t, lat);
+plot(t, lat_cell{1});
 title('Latitude(t)','interpreter','latex');
 xlabel('Time'); % x-axis label
 ylabel('Degree'); % y-axis label
@@ -283,7 +304,7 @@ grid on;
 
 %Plot of longitude
 subplot(2,2,2);
-plot(t, long);
+plot(t, long_cell{1});
 title('Longitude(t)','interpreter','latex');
 xlabel('Time'); % x-axis label
 ylabel('Degree'); % y-axis label
@@ -334,73 +355,73 @@ azimuth = zeros(1,length(t));
 a_primo = zeros(1,length(t));
 elevation = zeros(1,length(t));
 
-% Save latitude and longitude in degree to future checks
-lat_deg = lat;
-long_deg = long;
-
-for i = 1:length(t)
-
-    cos_lambda = cosd(lat_gs)*cosd(lat(i))*cosd(long_gs - long(i)) + sind(lat_gs)*sind(lat(i));
-    lambda = acosd(cos_lambda);
-    a_az = asind(sind(abs(long_gs - long(i)))*cosd(lat_gs)/sind(lambda));
-    
-    if lat(i) < lat_gs && long(i) < long_gs % South east
-        azimuth(i) = 180 - a_az;
-    end
-    if lat(i) < lat_gs && long(i) > long_gs % South west
-        azimuth(i) = 180 + a_az;
-    end
-    if lat(i) > lat_gs && long(i) < long_gs % North east
-        azimuth(i) = a_az;
-    end
-    if lat(i) > lat_gs && long(i) > long_gs % North west
-        azimuth(i) = 360 - a_az;
-    end    
-    a_primo(i) = a_az;
-    
-    b = 1+(re/r_t(i))^2;
-    c = 2*re/r_t(i);
-    cos_gamma = (c*(cosd(El))^2+sqrt(c^2*(cosd(El))^4-4*b*(cosd(El))^2+4))/2;
-    gamma = acosd(cos_gamma);
-    if(lambda < gamma)
-        elevation(i) = rad2deg(acos(sin(acos(cos_lambda))/sqrt(1+(re/r_t(i))^2+2*re/r_t(i)*cos_lambda)));
-    end
-end
-
-%Plot of Azimuth 
-figure(6);
-set(gcf,'Menubar','default','Name','Azimuth and Elevation');
-subplot(1,2,1); 
-plot(t, azimuth);
-title('$$Azimuth(t)$$','interpreter','latex');
-xlabel('Time'); % x-axis label
-ylabel('Degree'); % y-axis label
-grid on;
-
-%Plot of Elevation 
-subplot(1,2,2); 
-plot(t, elevation);
-title('$$Elevation(t)$$','interpreter','latex');
-xlabel('Time'); % x-axis label
-ylabel('Degree'); % y-axis label
-grid on;
-
-% % % pks = findpeaks(long_deg(1:ceil(length(long_deg)/2))); %pks = most eastern longitude
-% % % max_long = min(pks); %the smaller extreme in longitude
-% % % locs = find(long_deg == max_long); %index of max_long in the long vector
-% % % 
-% % % ext_lat = lat_deg(locs); %ext_lat = equivalent latitude at max_long
-% % % lat_index = find(lat_deg == ext_lat); %lat_index = index of the most western longitude
-% % % if lat_index(1) == locs
-% % %     lat_locs = lat_index(2);
-% % % else
-% % %     lat_locs = lat_index(1);
-% % % end
-% % % min_long = long_deg(lat_locs); %most western longitude
-% % % radius = lambda(locs); %radius of the circle of coverage for the max_long point
-% % % rext_east = max_long + radius;
-% % % lext_east = min_long + radius;
-% % % semi_cov = abs(rext_east - lext_east);
-% % % 
-% % % cov = 2*radius; %actual double coverage for tundra orbit in the north part
-% % % n_orbits = ceil(200/cov);
+% % Save latitude and longitude in degree to future checks
+% lat_deg = lat;
+% long_deg = long;
+% 
+% for i = 1:length(t)
+% 
+%     cos_lambda = cosd(lat_gs)*cosd(lat(i))*cosd(long_gs - long(i)) + sind(lat_gs)*sind(lat(i));
+%     lambda = acosd(cos_lambda);
+%     a_az = asind(sind(abs(long_gs - long(i)))*cosd(lat_gs)/sind(lambda));
+%     
+%     if lat(i) < lat_gs && long(i) < long_gs % South east
+%         azimuth(i) = 180 - a_az;
+%     end
+%     if lat(i) < lat_gs && long(i) > long_gs % South west
+%         azimuth(i) = 180 + a_az;
+%     end
+%     if lat(i) > lat_gs && long(i) < long_gs % North east
+%         azimuth(i) = a_az;
+%     end
+%     if lat(i) > lat_gs && long(i) > long_gs % North west
+%         azimuth(i) = 360 - a_az;
+%     end    
+%     a_primo(i) = a_az;
+%     
+%     b = 1+(re/r_t(i))^2;
+%     c = 2*re/r_t(i);
+%     cos_gamma = (c*(cosd(El))^2+sqrt(c^2*(cosd(El))^4-4*b*(cosd(El))^2+4))/2;
+%     gamma = acosd(cos_gamma);
+%     if(lambda < gamma)
+%         elevation(i) = rad2deg(acos(sin(acos(cos_lambda))/sqrt(1+(re/r_t(i))^2+2*re/r_t(i)*cos_lambda)));
+%     end
+% end
+% 
+% %Plot of Azimuth 
+% figure(6);
+% set(gcf,'Menubar','default','Name','Azimuth and Elevation');
+% subplot(1,2,1); 
+% plot(t, azimuth);
+% title('$$Azimuth(t)$$','interpreter','latex');
+% xlabel('Time'); % x-axis label
+% ylabel('Degree'); % y-axis label
+% grid on;
+% 
+% %Plot of Elevation 
+% subplot(1,2,2); 
+% plot(t, elevation);
+% title('$$Elevation(t)$$','interpreter','latex');
+% xlabel('Time'); % x-axis label
+% ylabel('Degree'); % y-axis label
+% grid on;
+% 
+% % % % pks = findpeaks(long_deg(1:ceil(length(long_deg)/2))); %pks = most eastern longitude
+% % % % max_long = min(pks); %the smaller extreme in longitude
+% % % % locs = find(long_deg == max_long); %index of max_long in the long vector
+% % % % 
+% % % % ext_lat = lat_deg(locs); %ext_lat = equivalent latitude at max_long
+% % % % lat_index = find(lat_deg == ext_lat); %lat_index = index of the most western longitude
+% % % % if lat_index(1) == locs
+% % % %     lat_locs = lat_index(2);
+% % % % else
+% % % %     lat_locs = lat_index(1);
+% % % % end
+% % % % min_long = long_deg(lat_locs); %most western longitude
+% % % % radius = lambda(locs); %radius of the circle of coverage for the max_long point
+% % % % rext_east = max_long + radius;
+% % % % lext_east = min_long + radius;
+% % % % semi_cov = abs(rext_east - lext_east);
+% % % % 
+% % % % cov = 2*radius; %actual double coverage for tundra orbit in the north part
+% % % % n_orbits = ceil(200/cov);
