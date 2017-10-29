@@ -34,42 +34,46 @@ load('tundra.mat');
 % raan = deg2rad(30); %Right ascension of the ascending node [deg]
 
 % Simulation parameters
-n_rev =1; %Number of revolutions
+n_rev =2; %Number of revolutions
 runspeed = 300; % Speed of the simulation
 El = 0; %Minimum elevation in degrees
-n_sat = 3;
+n_sat = 2;
 color = ['r','g','c','y','w'];
 raan = deg2rad(120);
-raan_sat = [raan, raan + deg2rad(-242.4783429000001), raan + deg2rad(-122.1497972999974)];
-% raan_sat = [raan, raan, raan];
-
-%Transformation Matrix from orbital to ECI Coordinates
-
-% orbital_to_ECI = [cos(raan)*cos(w) - sin(raan)*cos(inc)*sin(w), -cos(raan)*sin(w) - sin(raan)*cos(inc)*cos(w), sin(raan)*sin(inc);
-%      sin(raan)*cos(w) + cos(raan)*cos(inc)*sin(w), -sin(raan)*sin(w) + cos(raan)*cos(inc)*cos(w), -cos(raan)*sin(inc);
-%      sin(inc)*sin(w), sin(inc)*cos(w), cos(inc)];
-
+% raan_sat = [raan, raan + deg2rad(-242.4783429000001), raan + deg2rad(-122.1497972999974)];
+raan_sat = zeros(1,n_sat)+raan; % Initial raan vector
 t = 0:runspeed:T*n_rev; % time [s]
 
-% Compute Mean Anomaly and Eccentric Anomaly
 r = cell(n_sat); %cell vector containing the coordinates of the three satellites
 phi = cell(n_sat);
-x_0 = zeros(1,length(t));
-y_0 = zeros(1,length(t));
-z_0 = zeros(1,length(t));
-ECI_coord = zeros(3,length(t));
-ECI_velocity = zeros(4,length(t));
-ECEF_coord = zeros(3,length(t));
+h1 = cell(n_sat);
 
-%% Earth-satellite geometry parameters
-elong_ext = zeros(1,length(t)); %longitude of the extreme toward east
-nlat_ext = zeros(1,length(t)); %latitude of the extreme toward north
-wlong_ext = zeros(1,length(t)); %longitude of the extreme toward west
-slat_ext = zeros(1,length(t)); %latitude of the extreme toward south
+%% RAAN ESTIMATION FOR DIFFERENT SATELLITE IN THE SAME ORBITAL PLANE%
 
-%% Plot of the static components
+%Computation of polar coordination
+[r_t, phi_t] = get_polar(t, T, e, a, mu, n_rev);
 
-%Initializing the Drawing Space
+for i=0:n_sat-1    
+    r{i+1} = circshift(r_t,(T/n_sat*i)./runspeed,2);
+    phi{i+1} = circshift(phi_t,(T/n_sat*i)./runspeed,2);
+    h1{i+1} = plot(0,0,'o','Markersize',1);
+end
+
+[~, long, ~] = polar_to_LLA(t, r, phi, inc, w, raan_sat);
+
+for i=2:n_sat
+    long_temp = circshift(long{1},(T/n_sat*(i-1))./runspeed,2);
+    raan_diff = long{1}(1) - long{i}(1);
+    raan_sat(i) = raan_sat(i) + deg2rad(raan_diff);
+end
+
+%% COMPUTATION OF THE TRAJECTORY%
+
+[ECI, long, lat] = polar_to_LLA(t, r, phi, inc, w, raan_sat);
+
+%% 3-D ANIMATION
+
+%Initializing the Drawing Space and static components
 earthmap = imread('planisphere2.jpg');
 set(gcf,'Menubar','default','Name','Orbit Visualization', ... 
     'NumberTitle','off','Position',[70,10,750,750]); 
@@ -82,84 +86,6 @@ shg
 hold on
 grid on
 title('Orbital Visualization');
-
-%Julian Date of 10 January 2017 at noon
-A = 2017; %Year
-DTA = 10; %Days from 1 Jan of year A
-NAB1900 = 29; %Number of leap years since 1900
-TU = 12; %Hours in the day
-JD = 2415020 + 365*(A - 1900) + DTA + NAB1900 + TU/24 - 0.5;
-
-T_c = (JD - 2415020)/36525;
-alpha_go = 99.6909833 + 36000.7689*T_c + 3.8708e-4*T_c^2;
-
-%% COMPUTATION OF THE TRAJECTORY%
-
-ECI = cell(n_sat);
-long = cell(n_sat);
-lat = cell(n_sat);
-h1 = cell(n_sat);
-
-%Computation of polar coordination
-[r_t, phi_t] = get_polar(t, T, e, a, mu, n_rev);
-
-for i=0:n_sat-1    
-    r{i+1} = circshift(r_t,(T/n_sat*i)./runspeed,2);
-    phi{i+1} = circshift(phi_t,(T/n_sat*i)./runspeed,2);
-    h1{i+1} = plot(0,0,'o','Markersize',1);
-end
-
-%ECEF coordinates and LLA
-for i = 1:length(t)
-    %Transformation Matrix from ECI to ECEF Coordinates
-    theta = alpha_go + 0.25068447*t(i)/60;
-    theta = wrapTo2Pi(deg2rad(theta));
-    ECI_to_ECEF = [cos(theta) sin(theta) 0; 
-                  -sin(theta) cos(theta) 0; 
-                       0          0      1];
-    %Compute ECEF Coordinates
-    for j = 1:n_sat
-        x_0(i) = r{j}(i)* cos(phi{j}(i));
-        y_0(i) = r{j}(i)* sin(phi{j}(i));
-        
-        orbital_to_ECI = [cos(raan_sat(j))*cos(w) - sin(raan_sat(j))*cos(inc)*sin(w), -cos(raan_sat(j))*sin(w) - sin(raan_sat(j))*cos(inc)*cos(w), sin(raan_sat(j))*sin(inc);
-        sin(raan_sat(j))*cos(w) + cos(raan_sat(j))*cos(inc)*sin(w), -sin(raan_sat(j))*sin(w) + cos(raan_sat(j))*cos(inc)*cos(w), -cos(raan_sat(j))*sin(inc);
-        sin(inc)*sin(w), sin(inc)*cos(w), cos(inc)];
-
-        
-        ECI{j}(:,i) = orbital_to_ECI*[x_0(i); y_0(i); z_0(i)];
-
-        ECEF_coord(:,i) = ECI_to_ECEF*ECI{j}(:,i);
-
-        % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        % Transformation from ECEF to LLA
-        % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        p = sqrt(ECEF_coord(1,i).^2 + ECEF_coord(2,i).^2);
-        th = atan2(a_WGS84*ECEF_coord(3,i), b*p); %theta
-        long{j}(i) = atan2(ECEF_coord(2,i), ECEF_coord(1,i));
-        lat{j}(i) = atan2(ECEF_coord(3,i)+ep^2.*b.*sin(th).^3 , p-e_WGS84^2.*a_WGS84.*cos(th).^3);
-
-        N = a_WGS84./sqrt(1-e_WGS84.^2*sin(lat{j}(i)).^2);
-        alt = p./(cos(lat{j}(i))-N);
-
-        long{j}(i) = rad2deg(long{j}(i));
-        lat{j}(i) = rad2deg(lat{j}(i));
-
-        %return long in [0,360] range and remove 360 to longitude higher then
-        %180, to have West coordinates
-         long{j}(i) = mod(long{j}(i),360);
-         if long{j}(i) > 180
-             long{j}(i) = long{j}(i) - 360;
-         end
-    end
-end
-
-% long{1} = circshift(long{1},(T/n_sat*2)./runspeed,2);
-% raan_diff = long{1}(1) - long{3}(1);
-
-
-
-%% 3-D ANIMATION
 
 %Plotting the Earth
 [xx yy zz]=ellipsoid (0,0,0,a_WGS84, a_WGS84, b);
@@ -220,10 +146,14 @@ axis equal
 axis ([-180 180 -90 90]);
 set(gca, 'XDir', 'reverse');
 
+%% Ground Stations plot
 
-%% 
+% Earth-satellite geometry parameters
+elong_ext = zeros(1,length(t)); %longitude of the extreme toward east
+nlat_ext = zeros(1,length(t)); %latitude of the extreme toward north
+wlong_ext = zeros(1,length(t)); %longitude of the extreme toward west
+slat_ext = zeros(1,length(t)); %latitude of the extreme toward south
 
-%Ground Stations plot
 % plot (167.717,8.717,'o', 'MarkerEdgeColor', 'k','MarkerFaceColor','y','MarkerSize', 10);
 % plot (360-76.496, 42.440,'o', 'MarkerEdgeColor', 'k','MarkerFaceColor','y','MarkerSize', 10);
 for i=1:length(t)
