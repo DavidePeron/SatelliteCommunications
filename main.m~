@@ -36,12 +36,10 @@ load('tundra.mat');
 % Simulation parameters
 n_rev =1; %Number of revolutions
 runspeed = 300; % Speed of the simulation
-El = 15; %Minimum elevation in degrees
+El = 30; %Minimum elevation in degrees
 n_sat = 2;
 color = ['r','g','c','y','w'];
-raan = deg2rad(110);
-lat_gs = [80, 80];
-long_gs = [-180, 0];
+raan = deg2rad(120);
 % raan_sat = [raan, raan + deg2rad(-242.4783429000001), raan + deg2rad(-122.1497972999974)];
 raan_sat = zeros(1,n_sat)+raan; % Initial raan vector
 t = 0:runspeed:T*n_rev; % time [s]
@@ -80,7 +78,7 @@ earthplot3D(earthmap, t, e, a, ECI, color);
 
 %% Ground Track
 
-groundtrack_plot(earthmap, t, r, re, El, long, lat, color, lat_gs, long_gs);
+groundtrack_plot(earthmap, t, r, re, El, long, lat, color);
 
 %% 
 % %Plot of r(phi)
@@ -131,6 +129,9 @@ grid on;
 % % % alpha=GAMMA+rad2deg(gamma)%separation between orbital planes
 
 %% Azimuth estimation
+
+lat_gs = [60, 100];
+long_gs = [-80, -30];
 
 for k = 1:length(lat_gs)
 
