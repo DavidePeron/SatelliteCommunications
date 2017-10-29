@@ -34,14 +34,16 @@ load('tundra.mat');
 % raan = deg2rad(30); %Right ascension of the ascending node [deg]
 
 % Simulation parameters
-n_rev =2; %Number of revolutions
-runspeed = 200; % Speed of the simulation
+n_rev =1; %Number of revolutions
+runspeed = 300; % Speed of the simulation
 El = 0; %Minimum elevation in degrees
 eta_0 = 2*pi/T; %Angular velocity of the fictitious satellite [rad/sec]
 n_sat = 3;
 color = ['r','g','c','y','w'];
 raan = deg2rad(120);
-raan_sat = [raan, raan + deg2rad(210.2749), raan + deg2rad(63.3567)];
+raan_sat = raan_estimation(n_sat, );
+raan_sat = [raan, raan + deg2rad(-242.4783429000001), raan + deg2rad(-122.1497972999974)];
+% raan_sat = [raan, raan, raan];
 
 %Transformation Matrix from orbital to ECI Coordinates
 
@@ -139,8 +141,8 @@ for i = 1:length(t)
 end
 
 for i=0:n_sat-1    
-    r{i+1} = circshift(r_t,T./n_sat*i,2);
-    phi{i+1} = circshift(phi_t,T./n_sat*i,2);
+    r{i+1} = circshift(r_t,(T/n_sat*i)./runspeed,2);
+    phi{i+1} = circshift(phi_t,(T/n_sat*i)./runspeed,2);
     h1{i+1} = plot(0,0,'o','Markersize',1);
 end
 
@@ -189,7 +191,7 @@ for i = 1:length(t)
     end
 end
 
-% long{1} = circshift(long{1},T./n_sat*2,2);
+% long{1} = circshift(long{1},(T/n_sat*2)./runspeed,2);
 % raan_diff = long{1}(1) - long{3}(1);
 
 
@@ -402,7 +404,7 @@ for i = 1:length(t)
     for j=1:n_sat
         temp(j) = elevation{j}(i);
     end
-    max_el(i) = max(elevation{:}(i));
+    max_el(i) = max(temp);
 end
 
 %Plot of Azimuth 
@@ -421,12 +423,11 @@ grid on;
 
 %Plot of Elevation 
 subplot(1,2,2); 
-% for j = 1:n_sat
-%     plot(t, elevation{j}, color(j));
-%     hold on;
-% end
-% hold off;
-plot(t, max_el);
+for j = 1:n_sat
+    plot(t, elevation{j}, color(j));
+    hold on;
+end
+plot(t, max_el, 'b', 'LineWidth', 3);
 title('$$Elevation(t)$$','interpreter','latex');
 xlabel('Time'); % x-axis label
 ylabel('Degree'); % y-axis label

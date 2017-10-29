@@ -37,7 +37,6 @@ load('tundra.mat');
 n_rev =1; %Number of revolutions
 runspeed = 300; % Speed of the simulation
 El = 0; %Minimum elevation in degrees
-eta_0 = 2*pi/T; %Angular velocity of the fictitious satellite [rad/sec]
 n_sat = 3;
 color = ['r','g','c','y','w'];
 raan = deg2rad(120);
@@ -51,24 +50,16 @@ raan_sat = [raan, raan + deg2rad(-242.4783429000001), raan + deg2rad(-122.149797
 %      sin(inc)*sin(w), sin(inc)*cos(w), cos(inc)];
 
 t = 0:runspeed:T*n_rev; % time [s]
-t_p = 0:T:T*n_rev; % time at perigee pass at each cycle
 
 % Compute Mean Anomaly and Eccentric Anomaly
-M = zeros(1,length(t));
-E = zeros(1,length(t));
-r_t = zeros(1,length(t));
-v_t = zeros(1,length(t));
 r = cell(n_sat); %cell vector containing the coordinates of the three satellites
 phi = cell(n_sat);
 x_0 = zeros(1,length(t));
 y_0 = zeros(1,length(t));
 z_0 = zeros(1,length(t));
-phi_t = zeros(1,length(t));
 ECI_coord = zeros(3,length(t));
 ECI_velocity = zeros(4,length(t));
 ECEF_coord = zeros(3,length(t));
-% long = zeros(1,length(t));
-% lat = zeros(1,length(t));
 
 %% Earth-satellite geometry parameters
 elong_ext = zeros(1,length(t)); %longitude of the extreme toward east
@@ -109,35 +100,8 @@ long = cell(n_sat);
 lat = cell(n_sat);
 h1 = cell(n_sat);
 
-%ECI coordinates 
-for i = 1:length(t)
-
-    flag = 0;
-    %Mean Anomaly
-    M(i) = eta_0*(t(i) - t_p(1,floor(t(i)/T)+1));
-    
-    % Computation of Eccentric Anomaly with Newton-Raphson Method
-    E(i) = pi;
-    
-    %Newton-Raphson Method
-    while flag == 0
-        temp_1 = E(i);
-        E(i) = E(i) + (M(i) + e*sin(E(i)) - E(i))/(1 - e*cos(E(i)));
-        temp_2 = E(i);
-        if abs(temp_1 - temp_2) < 1e-2
-            flag = 1;
-        end
-    end
-    
-    
-    r_t(i) = a*(1-e*cos(E(i)));
-    v_t(i) = sqrt(mu*(2/r_t(i)-1/a));
-    phi_t(i) = acos(1/e*((a*(1-e^2))/r_t(i)-1));
-    
-    if(E(i) > pi)
-        phi_t(i) = 2*pi - phi_t(i);
-    end
-end
+%Computation of polar coordination
+[r_t, phi_t] = get_polar(t, T, e, a, mu, n_rev);
 
 for i=0:n_sat-1    
     r{i+1} = circshift(r_t,(T/n_sat*i)./runspeed,2);
@@ -359,10 +323,6 @@ long_gs = input(prompt);
 azimuth = cell(n_sat);
 a_primo = zeros(1,length(t));
 elevation = cell(n_sat);
-
-% Save latitude and longitude in degree to future checks
-lat_deg = lat;
-long_deg = long;
 
 for i = 1:length(t)
     for j = 1:n_sat
