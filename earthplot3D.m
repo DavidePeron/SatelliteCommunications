@@ -1,4 +1,4 @@
-function earthplot3D(earthmap, t, e, a, ECI, color)
+function earthplot3D(earthmap, t, r, re, El, e, a, ECI, color)
 
     load('earth_constants.mat');
     n_sat = length(ECI);
@@ -39,6 +39,7 @@ function earthplot3D(earthmap, t, e, a, ECI, color)
 
     sphere_position = cell(n_sat);
     position = cell(n_sat);
+    h1 = cell(n_sat);
 
     for i=1:length(t)
         rotate (earth, [0 0 1], (360/length(t)), [0,0,0]);

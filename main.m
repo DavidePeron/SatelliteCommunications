@@ -34,12 +34,12 @@ load('tundra.mat');
 % raan = deg2rad(30); %Right ascension of the ascending node [deg]
 
 % Simulation parameters
-n_rev =1; %Number of revolutions
+n_rev =2; %Number of revolutions
 runspeed = 300; % Speed of the simulation
 El = 15; %Minimum elevation in degrees
-n_sat = 2;
+n_sat = 3;
 color = ['r','g','c','y','w'];
-raan = deg2rad(110);
+raan = deg2rad(25);
 lat_gs = [80, 80];
 long_gs = [-180, 0];
 % raan_sat = [raan, raan + deg2rad(-242.4783429000001), raan + deg2rad(-122.1497972999974)];
@@ -57,15 +57,20 @@ phi = cell(n_sat);
 for i=0:n_sat-1    
     r{i+1} = circshift(r_t,(T/n_sat*i)./runspeed,2);
     phi{i+1} = circshift(phi_t,(T/n_sat*i)./runspeed,2);
+%     raan_sat(i+1) = raan_sat(i+1) + phi{i+1}(1);
 end
-
-[~, long, ~] = polar_to_LLA(t, r, phi, inc, w, raan_sat);
 
 for i=2:n_sat
-    long_temp = circshift(long{1},(T/n_sat*(i-1))./runspeed,2);
-    raan_diff = long{1}(1) - long{i}(1);
-    raan_sat(i) = raan_sat(i) + deg2rad(raan_diff);
+    raan_sat(i) = raan_sat(i) + deg2rad(360/n_sat*(i-1));
 end
+
+% [~, long, ~] = polar_to_LLA(t, r, phi, inc, w, raan_sat);
+% 
+% for i=2:n_sat
+%     long_temp = circshift(long{1},(T/n_sat*(i-1))./runspeed,2);
+%     raan_diff = long{1}(1) - long{i}(1);
+%     raan_sat(i) = raan_sat(i) + deg2rad(raan_diff);
+% end
 
 %% COMPUTATION OF THE TRAJECTORY%
 
@@ -76,7 +81,7 @@ end
 %Initializing the Drawing Space and static components
 earthmap = imread('planisphere2.jpg');
 
-earthplot3D(earthmap, t, e, a, ECI, color);
+earthplot3D(earthmap, t, r, re, El, e, a, ECI, color);
 
 %% Ground Track
 
@@ -134,7 +139,7 @@ grid on;
 
 for k = 1:length(lat_gs)
 
-    [azimuth, elevation, best_elevation] = view_angles(t, lat_gs(k), long_gs(k), long, lat, r, re, El);
+    [azimuth, elevation, best_elevation, best_azimuth] = view_angles(t, lat_gs(k), long_gs(k), long, lat, r, re, El);
 
     %Plot of Azimuth 
     figure(6+k-1);
@@ -144,7 +149,7 @@ for k = 1:length(lat_gs)
         plot(t, azimuth{j}, color(j));
         hold on;
     end
-    hold off;
+    plot(t, best_azimuth, 'b', 'LineWidth', 3);
     title('$$Azimuth(t)$$','interpreter','latex');
     xlabel('Time'); % x-axis label
     ylabel('Degree'); % y-axis label

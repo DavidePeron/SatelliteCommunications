@@ -1,10 +1,11 @@
-function [azimuth, elevation, best_elevation] = view_angles(t, lat_gs, long_gs, long, lat, r, re, El)
+function [azimuth, elevation, best_elevation, best_azimuth] = view_angles(t, lat_gs, long_gs, long, lat, r, re, El)
 
     n_sat = length(long);
     azimuth = cell(n_sat);
     elevation = cell(n_sat);
     temp = zeros(1,n_sat);
     best_elevation = zeros(1,length(t));
+    best_azimuth = zeros(1,length(t));
 
     for i = 1:length(t)
         for j = 1:n_sat
@@ -29,6 +30,7 @@ function [azimuth, elevation, best_elevation] = view_angles(t, lat_gs, long_gs, 
             c = 2*re/r{j}(i);
             cos_gamma = (c*(cosd(El))^2+sqrt(c^2*(cosd(El))^4-4*b*(cosd(El))^2+4))/2;
             gamma = acosd(cos_gamma);
+%             elevation{j}(i) = rad2deg(acos(sin(acos(cos_lambda))/sqrt(1+(re/r{j}(i))^2+2*re/r{j}(i)*cos_lambda)));
             if(lambda < gamma)
                 elevation{j}(i) = rad2deg(acos(sin(acos(cos_lambda))/sqrt(1+(re/r{j}(i))^2+2*re/r{j}(i)*cos_lambda)));
             else
@@ -39,7 +41,8 @@ function [azimuth, elevation, best_elevation] = view_angles(t, lat_gs, long_gs, 
         end
         
         % take the higher elevation between the different satellites
-        best_elevation(i) = max(temp);
+        [best_elevation(i), best_sat] = max(temp);
+        best_azimuth(i) = azimuth{best_sat}(i);
     end
 
 end
