@@ -23,7 +23,7 @@ load('earth_constants.mat');
 % w: argument of the perigee [rad]
 % raan: Right Ascension of the ascending node [rad]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-load('tundra.mat');
+load('molniya.mat');
 
 %%%%%% To create a personalized orbit, decomment the following code %%%%%%%
 % inc = deg2rad(63.4); %inclination
@@ -34,7 +34,7 @@ load('tundra.mat');
 % raan = deg2rad(30); %Right ascension of the ascending node [deg]
 
 % Simulation parameters
-n_rev =2; %Number of revolutions
+n_rev =1; %Number of revolutions
 runspeed = 300; % Speed of the simulation
 El = 15; %Minimum elevation in degrees
 n_sat = 3;
@@ -54,23 +54,33 @@ phi = cell(n_sat);
 %Computation of polar coordination
 [r_t, phi_t] = get_polar(t, T, e, a, mu, n_rev);
 
-for i=0:n_sat-1    
-    r{i+1} = circshift(r_t,(T/n_sat*i)./runspeed,2);
-    phi{i+1} = circshift(phi_t,(T/n_sat*i)./runspeed,2);
-%     raan_sat(i+1) = raan_sat(i+1) + phi{i+1}(1);
+r{1} = r_t;
+phi{1} = phi_t;
+
+for i=1:n_sat-1    
+    r{i+1} = circshift(r_t,(T/n_sat*i)./runspeed + 1,2);
+    phi{i+1} = circshift(phi_t,(T/n_sat*i)./runspeed + 1,2);
+    %Qui sto modificando il RAAN in modo da compensare lo shift di angolo
+    %di ogni satellite rispetto al perigee (il primo satellite è nel
+    %perigee dell'orbita
+    raan_sat(i+1) = raan_sat(i+1) + deg2rad(360/n_sat * T/86400)*i;
 end
 
-for i=2:n_sat
-    raan_sat(i) = raan_sat(i) + deg2rad(360/n_sat*(i-1));
-end
-
-% [~, long, ~] = polar_to_LLA(t, r, phi, inc, w, raan_sat);
-% 
+%In questo modo ogni satellite ha il raan sfasato dello stesso angolo ma mi sa che 
+%è sbagliato.
 % for i=2:n_sat
-%     long_temp = circshift(long{1},(T/n_sat*(i-1))./runspeed,2);
-%     raan_diff = long{1}(1) - long{i}(1);
-%     raan_sat(i) = raan_sat(i) + deg2rad(raan_diff);
+%     raan_sat(i) = raan_sat(i) + deg2rad(360/n_sat*(i-1));
 % end
+
+%%% lascia stare questa parte, ho provato a compensare il raan facendo
+%%% coincidere i groundtrack prendendo i valori dal grafico, schifo.
+% % % % % [~, long, ~] = polar_to_LLA(t, r, phi, inc, w, raan_sat);
+% % % % % 
+% % % % % for i=2:n_sat
+% % % % %     long_temp = circshift(long{1},(T/n_sat*(i-1))./runspeed,2);
+% % % % %     raan_diff = long{1}(1) - long{i}(1);
+% % % % %     raan_sat(i) = raan_sat(i) + deg2rad(raan_diff);
+% % % % % end
 
 %% COMPUTATION OF THE TRAJECTORY%
 
