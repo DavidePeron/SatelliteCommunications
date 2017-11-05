@@ -34,13 +34,17 @@ load('molniya.mat');
 % raan = deg2rad(30); %Right ascension of the ascending node [deg]
 
 % Simulation parameters
-n_rev =1; %Number of revolutions
+n_rev =2; %Number of revolutions
 runspeed = 300; % Speed of the simulation
-El = 15; %Minimum elevation in degrees
-n_sat = 3;
+El = 0; %Minimum elevation in degrees
+n_sat = 2;
 color = ['r','g','c','y','w'];
+
+%Tundra's Raan
+%raan = deg2rad(120);
+%Molniya's Raan
 raan = deg2rad(25);
-lat_gs = [80, 80];
+lat_gs = [40, 40];
 long_gs = [-180, 0];
 % raan_sat = [raan, raan + deg2rad(-242.4783429000001), raan + deg2rad(-122.1497972999974)];
 raan_sat = zeros(1,n_sat)+raan; % Initial raan vector

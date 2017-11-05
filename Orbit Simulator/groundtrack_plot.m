@@ -36,7 +36,7 @@ function groundtrack_plot(earthmap, t, r, re, El, long, lat, color, lat_gs, long
                 line([long{j}(i-1) long{j}(i)],[lat{j}(i-1) lat{j}(i)],'Color', color(j), 'LineWidth', 2);
             end
             delete(h1{j});
-            h1{j} = plot(long{j}(i),lat{j}(i),'o','MarkerEdgeColor',color(j), 'Markersize', lambda*2);
+            h1{j} = plot(long{j}(i),lat{j}(i),'o','MarkerEdgeColor',color(j), 'Markersize', 10);
         end
 
         pause (0.01);
