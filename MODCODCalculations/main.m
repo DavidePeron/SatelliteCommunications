@@ -2,8 +2,17 @@ clear all;
 close all;
 
 % 52 Mhz Transponders
-n_trans = 49;
 B_trans = 52e6;
+
+% Total Downlink Band from 10.7 GHz to 12.7 GHz => 2 GHz available
+low_limit_down_band = 10.7e9;
+high_limit_down_band = 12.7e9;
+down_band = high_limit_down_band - low_limit_down_band;
+
+% Total Uplink Band from 14 GHz to 14.5 GHz => 500 MHz available
+low_limit_up_band = 14e9;
+high_limit_up_band = 14.5e9;
+up_band = high_limit_up_band - low_limit_up_band;
 
 rolloff_factor = 0.15;
 
@@ -70,7 +79,16 @@ Rsymb_downlink = bit_rate_down/nu;
 B_downlink = Rsymb_downlink*(1+rolloff_factor);
 Rsymb_uplink = bit_rate_up/nu;
 B_uplink = Rsymb_uplink*(1+rolloff_factor);
-% End of the first solution
+
+%% Calculate the number of transponders needed
+n_trans = floor(down_band/B_downlink);
+
+centrals = zeros(1,n_trans - 1);
+for i = 1:n_trans - 1
+    centrals(i) = B_downlink / 2 + (B_downlink + B_downlink/(n_trans - 2))*(i-1);
+end
+
+centrals = centrals + low_limit_down_band;
 
 %% Calculation of the actual spectral efficiency 
 
