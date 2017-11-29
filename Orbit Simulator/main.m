@@ -23,7 +23,7 @@ load('earth_constants.mat');
 % w: argument of the perigee [rad]
 % raan: Right Ascension of the ascending node [rad]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-load('tundra.mat');
+load('molniya.mat');
 
 %%%%%% To create a personalized orbit, decomment the following code %%%%%%%
 % inc = deg2rad(63.4); %inclination
@@ -37,21 +37,32 @@ load('tundra.mat');
 n_rev =1; %Number of revolutions
 runspeed = 300; % Speed of the simulation
 El = 0; %Minimum elevation in degrees
-n_sat = 3;
+n_sat = 2;
 color = ['r','g','c','y','w'];
 
 %Tundra's Raan
 % raan = deg2rad(120);
 %Molniya's Raan
-raan = deg2rad(-25);
-lat_gs = [40, 80];
-long_gs = [-180, -90];
+raan = deg2rad(25);
+lat_gs = [61.267865]; %Ground station in Evenkiysky (Russia)
+long_gs = [-96.608223];
+R = [22.2016]; %Rain attenuation coefficient
+lat_us = [40]; %user random positioned
+long_us = [-180];
 % raan_sat = [raan, raan + deg2rad(-242.4783429000001), raan + deg2rad(-122.1497972999974)];
 raan_sat = zeros(1,n_sat)+raan; % Initial raan vector
 t = 0:runspeed:T*n_rev; % time [s]
 
 r = cell(n_sat); %cell vector containing the coordinates of the three satellites
 phi = cell(n_sat);
+best_r = zeros(1,length(t));
+best_sat_matrix = zeros(length(lat_gs),length(t));
+lambda_matrix = zeros(length(lat_gs),length(t));
+lambda_us_matrix = zeros(length(lat_gs),length(t));
+CNtot = zeros(length(lat_gs),length(t));
+link_margin = zeros(length(lat_gs),length(t));
+CNtot_rain = zeros(length(lat_gs),length(t));
+link_margin_rain = zeros(length(lat_gs),length(t));
 
 %% RAAN ESTIMATION FOR DIFFERENT SATELLITE IN THE SAME ORBITAL PLANE%
 
@@ -69,7 +80,7 @@ end
 %In questo modo ogni satellite ha il raan sfasato dello stesso angolo ma mi sa che 
 %è sbagliato.
 for i=2:n_sat
-    raan_sat(i) = raan_sat(i) + deg2rad(360/n_sat*(i-1));
+    raan_sat(i) = raan_sat(i) + deg2rad(180/n_sat*(i-1));
 end
 
 %% COMPUTATION OF THE TRAJECTORY%
@@ -78,14 +89,14 @@ end
 
 %% 3-D ANIMATION
 
-%Initializing the Drawing Space and static components
-earthmap = imread('planisphere2.jpg');
-
-earthplot3D(earthmap, t, r, re, El, e, a, ECI, color);
-
-%% Ground Track
-
-groundtrack_plot(earthmap, t, r, re, El, long, lat, color, lat_gs, long_gs);
+% % %Initializing the Drawing Space and static components
+% earthmap = imread('planisphere2.jpg');
+% 
+% earthplot3D(earthmap, t, r, re, El, e, a, ECI, color);
+% 
+% %% Ground Track
+% 
+% groundtrack_plot(earthmap, t, r, re, El, long, lat, color, lat_gs, long_gs);
 
 %% 
 % %Plot of r(phi)
@@ -116,33 +127,15 @@ xlabel('Time'); % x-axis label
 ylabel('Degree'); % y-axis label
 grid on;
 
-% % % %Time of visibility, max Angular Speed and Azimuth range [s]
-% % % Tv=(T/pi)*acos(cos(deg2rad(max(lambda)))/cos(deg2rad(min(lambda))));
-% % % AngularSpeed = zeros(1,length(t));
-% % % Dmin=re*(sin(deg2rad(min(lambda)))/sin(min(nadir)))
-% % % AngularSpeed(1,:)=(2*pi*(r_t(1,:)))/(T*Dmin)
-% % % maxAngularSpeed=max(AngularSpeed)
-% % % AzimuthRange=2*acos(tan(min(deg2rad(lambda)))/(tan(max(deg2rad(lambda)))))
-% % % %%% Number of satellites 
-% % % gamma=deg2rad(max(lambda)); %central angle
-% % % s=2*pi/(sqrt(3)*gamma); %number of satellites per orbiltal plane
-% % % s=floor(s);
-% % % orbitalp=2*pi/(3*gamma); %number of orbital planes
-% % % orbitalp=ceil(orbitalp);
-% % % totalnsatellites=s*orbitalp; %total number of satellites
-% % % sepsat=360/s;%separation of satellites in each orbital plane
-% % % relativephasing=sepsat/2; %relative phasing between satellites in adjacent planes
-% % % GAMMA=rad2deg(acos(cos(gamma)/(cos(pi/s))));%hald of ground swath width
-% % % alpha=GAMMA+rad2deg(gamma)%separation between orbital planes
-
 %% Azimuth estimation
 
 for k = 1:length(lat_gs)
 
-    [azimuth, elevation, best_elevation, best_azimuth] = view_angles(t, lat_gs(k), long_gs(k), long, lat, r, re, El);
-
+    [azimuth, elevation, best_elevation, best_azimuth, best_sat_matrix(k,:), lambda_matrix(k,:), lambda_us_matrix(k,:)] = view_angles(t, lat_gs(k), long_gs(k), long, lat, r, re, El, lat_us(k),long_us(k));
+    
+    [CNtot(k,:),link_margin(k,:), CNtot_rain(k,:),link_margin_rain(k,:)]=link_budget(r,t,lambda_matrix(k,:),lambda_us_matrix(k,:), best_sat_matrix(k,:), R(k), best_elevation);
     %Plot of Azimuth 
-    figure(6+k-1);
+    figure(5+k);
     set(gcf,'Menubar','default','Name','Azimuth and Elevation ');
     subplot(1,2,1);
     for j = 1:n_sat
@@ -166,24 +159,69 @@ for k = 1:length(lat_gs)
     xlabel('Time'); % x-axis label
     ylabel('Degree'); % y-axis label
     grid on;
-end
+    
+    for j = 1:length(t)
+        best_r(j) = r{best_sat_matrix(k,j)}(j);
+    end
+    
+    figure(5+length(lat_gs)+k)
+    set(gcf,'Menubar','default','Name','Link Budget');
+    subplot(2,2,1);
+    plot((best_r./1000),CNtot(k,:))
+    title('Distance Best Satellite-Earth VS Total SNR')
+    xlabel('Distance Satellite-Earth (Km)')
+    ylabel('Total SNR (dB)')
+    grid on;
 
-% % % pks = findpeaks(long_deg(1:ceil(length(long_deg)/2))); %pks = most eastern longitude
-% % % max_long = min(pks); %the smaller extreme in longitude
-% % % locs = find(long_deg == max_long); %index of max_long in the long vector
-% % % 
-% % % ext_lat = lat_deg(locs); %ext_lat = equivalent latitude at max_long
-% % % lat_index = find(lat_deg == ext_lat); %lat_index = index of the most western longitude
-% % % if lat_index(1) == locs
-% % %     lat_locs = lat_index(2);
-% % % else
-% % %     lat_locs = lat_index(1);
-% % % end
-% % % min_long = long_deg(lat_locs); %most western longitude
-% % % radius = lambda(locs); %radius of the circle of coverage for the max_long point
-% % % rext_east = max_long + radius;
-% % % lext_east = min_long + radius;
-% % % semi_cov = abs(rext_east - lext_east);
-% % % 
-% % % cov = 2*radius; %actual double coverage for tundra orbit in the north part
-% % % n_orbits = ceil(200/cov);
+    subplot(2,2,2);
+    plot(best_r./1000,link_margin(k,:))
+    title('Distance Best Satellite-Earth VS Link margin')
+    xlabel('Distance Satellite-Earth (Km)')
+    ylabel('Link margin')
+    grid on;
+    
+    subplot(2,2,3);
+    plot(t,CNtot(k,:))
+    title('Distance Time VS Total SNR')
+    xlabel('Distance Satellite-Earth (Km)')
+    ylabel('Total SNR (dB)')
+    grid on;
+    
+    subplot(2,2,4);
+    plot(t,link_margin(k,:))
+    title('Distance Time VS Link margin')
+    xlabel('Distance Satellite-Earth (Km)')
+    ylabel('Link margin')
+    grid on;
+    
+    figure(5+2*length(lat_gs)+k)
+    set(gcf,'Menubar','default','Name','Link Budget with rain');
+    subplot(2,2,1);
+    plot((best_r./1000),CNtot_rain(k,:))
+    title('Distance Best Satellite-Earth VS Total SNR')
+    xlabel('Distance Satellite-Earth (Km)')
+    ylabel('Total SNR (dB)')
+    grid on;
+
+    subplot(2,2,2);
+    plot(best_r./1000,link_margin_rain(k,:))
+    title('Distance Best Satellite-Earth VS Link margin')
+    xlabel('Distance Satellite-Earth (Km)')
+    ylabel('Link margin')
+    grid on;
+    
+    subplot(2,2,3);
+    plot(t,CNtot_rain(k,:))
+    title('Distance Time VS Total SNR')
+    xlabel('Distance Satellite-Earth (Km)')
+    ylabel('Total SNR (dB)')
+    grid on;
+    
+    subplot(2,2,4);
+    plot(t,link_margin_rain(k,:))
+    title('Distance Time VS Link margin')
+    xlabel('Distance Satellite-Earth (Km)')
+    ylabel('Link margin')
+    grid on;
+    
+end
