@@ -46,7 +46,7 @@ color = ['r','g','c','y','w'];
 raan = deg2rad(25);
 lat_gs = [61.267865]; %Ground station in Evenkiysky (Russia)
 long_gs = [-96.608223];
-R = [22.2016]; %Rain attenuation coefficient
+R = [22.2016]; %Rain attenuation coefficient [mm/h]
 lat_us = [40]; %user random positioned
 long_us = [-180];
 % raan_sat = [raan, raan + deg2rad(-242.4783429000001), raan + deg2rad(-122.1497972999974)];
@@ -182,15 +182,15 @@ for k = 1:length(lat_gs)
     
     subplot(2,2,3);
     plot(t,CNtot(k,:))
-    title('Distance Time VS Total SNR')
-    xlabel('Distance Satellite-Earth (Km)')
+    title('Time VS Total SNR')
+    xlabel('Time (s)')
     ylabel('Total SNR (dB)')
     grid on;
     
     subplot(2,2,4);
     plot(t,link_margin(k,:))
-    title('Distance Time VS Link margin')
-    xlabel('Distance Satellite-Earth (Km)')
+    title('Time VS Link margin')
+    xlabel('Time (s)')
     ylabel('Link margin')
     grid on;
     
@@ -199,28 +199,28 @@ for k = 1:length(lat_gs)
     subplot(2,2,1);
     plot((best_r./1000),CNtot_rain(k,:))
     title('Distance Best Satellite-Earth VS Total SNR')
-    xlabel('Distance Satellite-Earth (Km)')
+    xlabel('Distance Best Satellite-Earth (Km)')
     ylabel('Total SNR (dB)')
     grid on;
 
     subplot(2,2,2);
     plot(best_r./1000,link_margin_rain(k,:))
     title('Distance Best Satellite-Earth VS Link margin')
-    xlabel('Distance Satellite-Earth (Km)')
+    xlabel('Distance Best Satellite-Earth (Km)')
     ylabel('Link margin')
     grid on;
     
     subplot(2,2,3);
     plot(t,CNtot_rain(k,:))
     title('Distance Time VS Total SNR')
-    xlabel('Distance Satellite-Earth (Km)')
+    xlabel('Time (s)')
     ylabel('Total SNR (dB)')
     grid on;
     
     subplot(2,2,4);
     plot(t,link_margin_rain(k,:))
     title('Distance Time VS Link margin')
-    xlabel('Distance Satellite-Earth (Km)')
+    xlabel('Time (s)')
     ylabel('Link margin')
     grid on;
     

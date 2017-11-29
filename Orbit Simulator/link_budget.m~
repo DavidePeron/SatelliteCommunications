@@ -101,17 +101,17 @@ function [CNtot, link_margin, CNtot_rain, link_margin_rain]= link_budget(r,t,lam
     EIRP_down = G_down + p_tx_down; %Gateway EIRP
     
     G_user = 10*log10(efficiency*((pi*Diameter_user*frequency_downlink)/c)^2);
-    T_user = 30; %User temperature [K]
+    Tvsat = 290; %Vsat temperature
     LNB_noise_figure = 1.3;
     T_LNB = 290*((10^(LNB_noise_figure/10))-1);
-    GT_user = G_user - 10*log10(T_user + T_LNB); %G/T user station
+    GTvsat = Gvsat - 10*log10(Tvsat + T_LNB); %G/T user station
     pointing_loss = 0.3; %[dB]
     gases_absortion = 0.3;
 
     for n = 1:length(t)   
        Ld_pathloss(n) = 20*log10((4*pi*distance_down(n)*frequency_downlink)/c);  %Path Loss
        Ld_rain(n) = (4.21e-5 * (frequency_downlink/10^9)^2.42)*R^(1.41*(frequency_downlink/10^9)^(-0.0779))*2/sind(best_elevation(n)); %I assume that the clouds are 2km high
-       CN_downlink(n) = EIRP_down + GT_user - Ld_pathloss(n) - k - 10*log10(carrier_s_r) - pointing_loss - gases_absortion;
+       CN_downlink(n) = EIRP_down + GTvsat - Ld_pathloss(n) - k - 10*log10(carrier_s_r) - pointing_loss - gases_absortion;
        CN_downlink_rain(n) = CN_downlink(n) - Ld_rain(n);
     end
 
