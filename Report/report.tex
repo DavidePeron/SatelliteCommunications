@@ -15,14 +15,18 @@
 \usepackage{booktabs}
 \newcommand{\tabitem}{~~\llap{\textbullet}~~}
 \usepackage{graphicx}
-\graphicspath{ {./pics/} {./eps/}}
+\graphicspath{ {./figures/} {./eps/}}
 \usepackage{epsfig}
 \usepackage{epstopdf}
+\usepackage{verbatim}
+\usepackage{textcomp}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% COLOR DEFINITIONS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\usepackage[dvipsnames]{xcolor} % Enabling mixing colors and color's call by 'svgnames'
+ % Enabling mixing colors and color's call by 'svgnames'
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \definecolor{MyColor1}{rgb}{0.2,0.4,0.6} %mix personal color
 \newcommand{\textb}{\color{Black} \usefont{OT1}{lmss}{m}{n}}
@@ -60,7 +64,7 @@
 \usepackage{caption}
 \usepackage{subcaption}
 %%%%%%%%%%%%%%%%%%%%%%%%
-\captionsetup[figure]{labelfont={color=Turquoise}}
+\captionsetup[figure]{labelfont={color=MyColor1}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %		!!!EQUATION (ARRAY) --> USING ALIGN INSTEAD
@@ -101,28 +105,6 @@
 \date{\today}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%For the TikZ image
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% A diagram of TeX software
-% Author: Stefan Kottwitz
-% https://www.packtpub.com/hardware-and-creative/latex-cookbook
-%\documentclass[border=10pt]{standalone}
-%%%<
-\usepackage{verbatim}
-%%%>
-\begin{comment}
-:Title: A circular diagram of a TeX workflow
-:Tags: Diagrams;Smartdiagram;Cookbook
-:Author: Stefan Kottwitz
-:Slug: smart-constellation
-
-A diagram presenting TeX software using the
-smartdiagram package.
-\end{comment}
-\usepackage{smartdiagram}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \begin{document}
 \maketitle
 
@@ -130,7 +112,7 @@ smartdiagram package.
 \clearpage
 
 \section{Problem Description}
-\lipsum[1-2]
+	\input{problem_description.tex}
 
 \section{Orbit Selection and constellation}
 	\lipsum[1]
@@ -142,6 +124,7 @@ smartdiagram package.
 	\subsection{Communication Module}
 	\lipsum[1]
 	\subsection{Payload}
+	\input{payload_fig.tex}
 	\lipsum[1]
 	\subsection{Power Budget}
 	\lipsum[1]
