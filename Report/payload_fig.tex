@@ -1,0 +1,75 @@
+% Definition of blocks:
+\tikzset{%
+  block/.style    = {draw, thick, rectangle, minimum height = 3em,
+    minimum width = 3em},
+	rect/.style    = {draw, thick, rectangle, minimum height = 3em,
+	    minimum width = 1.5em},
+	mux/.style    = {draw, thick, rectangle, minimum height = 7em,
+			minimum width = 2.5em, align=left},
+	triang/.style    = {draw, thick, isosceles triangle, minimum height = 3em, minimum width = 1.5em, align=left},
+  mult/.style      = {draw, circle, node distance = 2.7cm},
+  ghost/.style    = {coordinate}, % Input
+  output/.style   = {coordinate} % Output
+}
+% Defining string as labels of certain blocks.
+\newcommand{\mult}{\Large$\times$}
+\newcommand{\inte}{$\displaystyle \int$}
+\newcommand{\derv}{\huge$\frac{d}{dt}$}
+
+\begin{tikzpicture}[auto, thick, node distance=2cm, >=triangle 45]
+\draw
+	% Drawing the blocks of first filter :
+	node at (0,0)[right=-3mm, , label={below:(0)}]{\Large \textopenbullet}
+	node [ghost, name=input1] {}
+	% node [sum, right of=input1] (suma1) {\suma}
+	node [rect, right of=input1, label={below:(1)}] (pol_sep) {}
+  node [triang, right of=pol_sep, label={below:(2)}] (lna) {LNA}
+  node [mult, right of=lna, label={D/C}, label={below:(3)}] (dlc) {\mult}
+	node [triang, right of=dlc, label={below:(4)}] (ifa) {IF \\ amp}
+	node [mult, right of=ifa, label={U/C}, label={below:(5)}] (ulc) {\mult}
+	node [triang, right of=ulc, label={below:(6)}] (hpa) {HPA}
+	node [triang, right of=hpa, label={below:(7)}] (bpf) {}
+	node [mux, right of=bpf] (imux) {I \\M \\U \\ X}
+	node at (19,1.5)[right=-3mm, name = ch1, label={left:$ch_1$}]{\Large \textopenbullet}
+	node at (19,1)[right=-3mm, name = ch2]{}
+	node at (19,0.5)[right=-3mm, name = ch3]{}
+	node at (19,0)[right=-3mm, name = ch4]{}
+	node at (19,-1.5)[right=-3mm, name = chN, , label={left:$ch_N$}]{}
+	node [triang, right of=ch1, label={below:(8)}] (ca) {}
+	node [block, right of=ca, label={below:(9)}] (alc) {ALC}
+	node [triang, right of=alc, label={below:(10)}] (outamp) {}
+	node [mux, right of=imux, node distance = 10cm] (omux) {O \\M \\U \\ X}
+	node [triang, right of=omux, label={below:(11)}] (bpf2) {}
+	node at (32,0)[right=-3mm, name = outantenna, label={below:(12)}]{\Large \textopenbullet};
+    % Joining blocks.
+    % Commands \draw with options like [->] must be written individually
+	\draw[-](input1) -- node {}(pol_sep);
+	\draw[-](pol_sep) -- node {} (lna);
+	\draw[-](lna) -- node {$f_D$} (dlc);
+	\draw[-](dlc) -- node {$f_{IF}$} (ifa);
+	\draw[-](ifa) -- node {$f_{IF}$} (ulc);
+	\draw[-](ulc) -- node {$f_u$} (hpa);
+	% \draw[-](rx) -- node {} (bpf);
+	\draw[-](hpa) -- node {} (bpf);
+	\draw[-](bpf) -- node {} (imux);
+	\draw[-](imux) -- node {} (ch1);
+	\draw[-](imux) -- node {} (ch2);
+	\draw[dashed](imux) -- node {} (ch3);
+	\draw[dashed](imux) -- node {} (ch4);
+	\draw[-](imux) -- node {} (chN);
+	\draw[-](ch1) -- node {} (ca);
+	\draw[-](ca) -- node {} (alc);
+	\draw[-](alc) -- node {} (outamp);
+	\draw[-](outamp) -- node {} (omux);
+	\draw[-](omux) -- node {} (bpf2);
+	\draw[-](bpf2) -- node {} (outantenna);
+
+% 	% Boxing and labelling
+	\draw [color=gray, dashed, label={Receiver Block}](1,-1.5) rectangle (14.5,1.5);
+	\node at (6.5,1.5) [above=5mm, right=0mm] {\textsc{Receiver Block}};
+
+	\draw [color=gray, dashed, label={Receiver Block}](14.8,2.5) rectangle (31,-2.5);
+	\node at (21.5,2.5) [above=5mm, right=0mm] {\textsc{Repeater Block}};
+	\draw [color=gray,thick](-0.5,-9) rectangle (12.5,-5);
+	\node at (-0.5,-9) [below=5mm, right=0mm] {\textsc{second-order noise shaper}};
+\end{tikzpicture}

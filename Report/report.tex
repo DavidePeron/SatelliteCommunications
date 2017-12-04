@@ -16,17 +16,18 @@
 \usepackage{booktabs}
 \newcommand{\tabitem}{~~\llap{\textbullet}~~}
 \usepackage{graphicx}
-\graphicspath{ {./pics/} {./eps/}}
+\graphicspath{ {./figures/} {./eps/}}
 \usepackage{epsfig}
 \usepackage{epstopdf}
-%%%%%%%%%%%%%%%%%%%%
-%Figures
-%%%%%%%%%%%%%%%%%%%%
-\graphicspath{{./figures/}}
+\usepackage{verbatim}
+\usepackage{textcomp}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% COLOR DEFINITIONS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\usepackage[dvipsnames]{xcolor} % Enabling mixing colors and color's call by 'svgnames'
+ % Enabling mixing colors and color's call by 'svgnames'
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \definecolor{MyColor1}{rgb}{0.2,0.4,0.6} %mix personal color
 \newcommand{\textb}{\color{Black} \usefont{OT1}{lmss}{m}{n}}
@@ -64,7 +65,7 @@
 \usepackage{caption}
 \usepackage{subcaption}
 %%%%%%%%%%%%%%%%%%%%%%%%
-\captionsetup[figure]{labelfont={color=Turquoise}}
+\captionsetup[figure]{labelfont={color=MyColor1}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %		!!!EQUATION (ARRAY) --> USING ALIGN INSTEAD
@@ -97,6 +98,12 @@
 \renewcommand{\labelenumii}{\theenumii}
 \renewcommand{\theenumii}{\theenumi.\arabic{enumii}.}
 
+\usepackage[acronym]{glossaries}
+\newacronym[plural=GEO,longplural={Geostationary Earth Orbits}]{geo}{GEO}{Geostationary Earth Orbit}
+\newacronym[plural=LEO,longplural={Low Earth Orbits}]{leo}{LEO}{Low Earth Orbit}
+\newacronym[plural=MEO,longplural={Medium Earth Orbits}]{meo}{MEO}{Medium Earth Orbit}
+\newacronym[plural=HEO,longplural={High Elliptical Orbits}]{heo}{HEO}{High Elliptical Orbit}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% PREPARE TITLE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -106,64 +113,74 @@
 \date{\today}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%For the TikZ image
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% A diagram of TeX software
-% Author: Stefan Kottwitz
-% https://www.packtpub.com/hardware-and-creative/latex-cookbook
-%\documentclass[border=10pt]{standalone}
-%%%<
-\usepackage{verbatim}
-%%%>
-\begin{comment}
-:Title: A circular diagram of a TeX workflow
-:Tags: Diagrams;Smartdiagram;Cookbook
-:Author: Stefan Kottwitz
-:Slug: smart-constellation
-
-A diagram presenting TeX software using the
-smartdiagram package.
-\end{comment}
-\usepackage{smartdiagram}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \begin{document}
 \maketitle
 
 \tableofcontents
 \clearpage
 
-\section{Problem Description}
-\lipsum[1-2]
+\section{Problem Description} \label{sec:problem_description}
+	\input{problem_description.tex}
 
-\section{Orbit Selection and constellation}
-	\lipsum[1]
-	\subsection{Simulation Architecture}
-	\lipsum[2]
+\section{Simulator and Orbits} \label{sec:orbit}
+	To guarantee the service required in \autoref{sec:problem_description}, different orbits have been taken in account.
+	The most used orbit to ensure a stable and reliable satellite communication is Geostationary.
+	\autoref{fig:GEOCoverage} has been taken from the Inmarsat's Website, and it shows as a \gls{geo} satellite can not reach the latitudes over $75^\circ$. For this reason a \gls{geo} does not fit our purpose.
+
+	\glspl{leo} has been discarded since the time of visibility for a single satellite is very low, so an high number of satellites and an accurate tracking system are required to ensure a continuous service.
+
+	\glspl{meo} suffer the same problems of \glspl{leo} ones, with the addition of the proximity to the Van Allen Belt where signal degradation increases significantly.
+
+	The most suitable solution for our problem is a \gls{heo}.
+
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.7\textwidth]{figures/GEOCoverage.jpeg}
+		\caption{Approximate coverage of GEO Satellites.}
+		\label{fig:GEOCoverage}
+	\end{figure}
+	\subsection{Simulator Architecture}
+		\lipsum[2]
+	\subsection{Orbit selection}
+		\input{orbits_constellation.tex}
 
 \section{Payload and Space Segment}
-	\lipsum[1]
+		\lipsum[1]
 	\subsection{Communication Module}
-	\lipsum[1]
+		\lipsum[1]
 	\subsection{Payload}
-	\lipsum[1]
+		\input{payload_fig.tex}
+		\subsubsection{Receiver Block}
+			\lipsum[1]
+		\subsubsection{Repeater Block}
+			\lipsum[1]
 	\subsection{Power Budget}
-	\lipsum[1]
-	\subsection{Weight Analysis}
-	\lipsum[1]
+		\subsubsection{Required Power}
+			\lipsum[1]
+		\subsubsection{Solar Panels specifications}
+			\lipsum[1]
+	\subsection{Weight Estimation}
+		\lipsum[1]
 
 \section{Ground Segment}
 	\lipsum[1]
-	\subsection{Network Topology}
-	\lipsum[1]
-	\subsection{Ground Stations specifications}
-	\lipsum[1]
+	\subsection{Ground Station coordinates}
+		\lipsum[1]
+	\subsection{Ground Station requirements}
+		\lipsum[1]
+	\subsection{User requirements}
 
 \section{Link Budget}
+	\subsection{Parameters setting and estimation}
+		\subsubsection{Antenna Parameters}
+		\subsubsection{Effective Isotropic Radiated Power(EIRP)}
+		\subsubsection{Losses}
+	\subsection{Uplink}
+	\subsection{Downlink}
+	\subsection{Overall Link Budget}
 \lipsum[1]
 
-\section{Cost Analysis}
+\section{Cost Estimation}
 	\subsection{Spacecraft cost}
 		The spacecraft cost can be estimated depending on several parameters and criteria, such as the type of mission, the 				subsystem considered and the unit over which calculate the cost. In our specific case we concentrated on the cost analysis 		for a communication-type satellite and review it for every subsystem of the spacecraft and its launch procedure.\\
 		
@@ -292,8 +309,8 @@ Cost_{Total} = Cost_{Launch} + Cost_{Spacecraft} = \cri{Mettere costo finale} \t
 \label{fig:spacex}
 \end{figure}
 
-\section{Final considerations and conclusion}
-\lipsum[1]
+\section{Final considerations and conclusions}
+	\lipsum[1]
 
 
 
