@@ -4,6 +4,7 @@
 \usepackage[english]{babel}
 \usepackage{lipsum}
 \usepackage{eurosym}
+\usepackage{rotating}
 
 \usepackage{amsmath, amssymb, amsfonts, amsthm, mathtools}
 % mathtools for: Aboxed (put box on last equation in align envirenment)
@@ -83,7 +84,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newcommand{\DP}[1]{\textcolor{blue}{\textbf{(DP says: #1)}}}
-\newcommand{\cri}[1]{\textcolor{yellow}{\textbf{(Cri says: #1)}}}
+\newcommand{\cri}[1]{\textcolor{green}{\textbf{(Cri says: #1)}}}
 
 \makeatletter
 \let\reftagform@=\tagform@
@@ -103,6 +104,7 @@
 \newacronym[plural=LEO,longplural={Low Earth Orbits}]{leo}{LEO}{Low Earth Orbit}
 \newacronym[plural=MEO,longplural={Medium Earth Orbits}]{meo}{MEO}{Medium Earth Orbit}
 \newacronym[plural=HEO,longplural={High Elliptical Orbits}]{heo}{HEO}{High Elliptical Orbit}
+\newacronym[plural=GS,longplural={Ground Stations}]{gs}{GS}{Ground Station}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% PREPARE TITLE
@@ -149,7 +151,13 @@
 	\subsection{Communication Module}
 		\lipsum[1]
 	\subsection{Payload}
-		\input{payload_fig.tex}
+		%\input{payload_fig.tex}
+\begin{sidewaysfigure}
+\centering
+\includegraphics[width = \textwidth]{Payload.png}
+\caption{Payload representaiton}
+\label{fig:payload}
+\end{sidewaysfigure}
 		\subsubsection{Receiver Block}
 			\lipsum[1]
 		\subsubsection{Repeater Block}
@@ -163,12 +171,47 @@
 		\lipsum[1]
 
 \section{Ground Segment}
-	\lipsum[1]
+	The ground segment is composed by a single \gls{gs} and all the mobile users moving around on the northern lands and 		seas of Russia and Europe. The reason for just one \gls{gs} is that, since we do not deploy the multibeam option, there is no 		necessity of having more than one \gls{gs}, because one is enough to correctly collect all the traffic coming from the satellite 		and toward it.
 	\subsection{Ground Station coordinates}
-		\lipsum[1]
+		The coordinates of the \gls{gs} are:
+		\begin{align}
+		lat &= 61.267865\\
+		long &= -96.608223\\
+		\end{align}
+		These coordinates have been chosen based on the elevation values: the coordinates listed above represent a point in 				Russia in the surrounding area of the subsatellite point of the apogee. In this way, the values of elevation are always 				substantially high, guaranteeing always a good visibility. Moreover, another factor is the rain attenuation, which is not 			much high in this region, as we can conclude from the respective value of $R$:
+		\begin{equation}
+		R = 22.2016 \quad mm/h
+		\end{equation}
 	\subsection{Ground Station requirements}
-		\lipsum[1]
+		The requirements for the \gls{gs} are substantially the following:
+		\begin{itemize}
+			\item the Internet connection;
+			\item the antenna model and specifications.
+		\end{itemize}
+
+		The Internet connection is the most important (if not the only one) reason for the existence of the \gls{gs}, since one of 			the problem requirements is indeed the possibility of video calls and other internet services.
+
+		For the antenna model we chose a reflector antenna with a single circular beam; the antenna parameters are 					listed in \autoref{tab:antennaParam}
+		\begin{table}
+			\centering
+			\begin{tabular}{cc}
+			\toprule
+			Parameter & Value\\
+			\midrule
+			Frequency Band & Ku Band\\
+			Dish diameter D & 11 m\\
+			Efficiency & 0.6\\
+			IBO & -0.5 \cri{può essere considerato un parametro d'antenna?}\\
+			\bottomrule
+			\end{tabular}
+			\caption{\gls{gs} antenna specifications}
+			\label{tab:antennaParam}
+		\end{table}
+
+		%Another aspect to consider is the fact that the variations in the azimuth values are very steep in a specific moment of the satellite revolution, and this brings as side effect the temporary suspension of the service for the time needed by the \gls{gs} to point properly the correct satellite in orbit (about 2 minutes).
+\cri{la metto sta frasae qui? a suo tempo il prof mi pare avesse detto che andava specificato, però a leggerla mi rattristo a pensare che offriamo un servizio che per 2 minuti al giorno sistematicamente non funziona}
 	\subsection{User requirements}
+The user requirements are substantially the model of the antenna and the dimension of the dish: the model is identical to the ones used for the satellite and the \gls{gs}, so a reflector antenna with a single beam; the dish diameter is smaller in this case, for a matter of space and feasibility, and is of 1 m \cri{verifica valore}. There is no need, in this case, of specifying the position of the users since by definition they are mobile users.
 
 \section{Link Budget}
 	\subsection{Parameters setting and estimation}
