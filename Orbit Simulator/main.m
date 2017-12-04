@@ -77,8 +77,7 @@ for i=1:n_sat-1
     phi{i+1} = circshift(phi_t,(T/(n_sat)*i)./runspeed + 1,2);
 end
 
-%In questo modo ogni satellite ha il raan sfasato dello stesso angolo ma mi sa che 
-%è sbagliato.
+%In questo modo ogni satellite ha il raan sfasato dello stesso angolo
 for i=2:n_sat
     raan_sat(i) = raan_sat(i) + deg2rad(180/n_sat*(i-1));
 end

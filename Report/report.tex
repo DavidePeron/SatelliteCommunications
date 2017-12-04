@@ -103,6 +103,10 @@
 \newacronym[plural=LEO,longplural={Low Earth Orbits}]{leo}{LEO}{Low Earth Orbit}
 \newacronym[plural=MEO,longplural={Medium Earth Orbits}]{meo}{MEO}{Medium Earth Orbit}
 \newacronym[plural=HEO,longplural={High Elliptical Orbits}]{heo}{HEO}{High Elliptical Orbit}
+\newacronym{eci}{ECI}{Earth Centered Inertial}
+\newacronym{lla}{LLA}{geodetic latitude, longitude, altitude coordinates}
+\newacronym{gs}{GS}{Ground Station}
+\newacronym{raan}{RAAN}{Right Ascending of Ascension Node}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% PREPARE TITLE
@@ -143,7 +147,7 @@
 		\label{fig:GEOCoverage}
 	\end{figure}
 	\subsection{Simulator Architecture}\label{sec:simulator}
-		\lipsum[2]
+		\input{simulator_architecture.tex}
 	\subsection{Orbit selection}
 		\input{orbits_constellation.tex}
 
