@@ -47,19 +47,24 @@ raan = deg2rad(25);
 % lat_gs = [61.267865]; %Ground station in Evenkiysky (Russia)
 % long_gs = [-96.608223];
 
-long_gs = linspace(0,180, 19);
-long_gs = repelem(long_gs,3);
+%Create a ground station for each cell (cell of 10 deg of longitude and 10
+%of latitude
 
-lat_gs = zeros(1,length(long_gs));
-
-for i = 1:3:length(long_gs)
-    lat_gs(i) = 65;
-    lat_gs(i+1) = 75;
-    lat_gs(i+2) = 85;
-    
-end
-% lat_gs = [71]; %Ground station in Evenkiysky (Russia)
-% long_gs = [-75];
+% long_gs = linspace(-180,0, 19);
+% long_gs = repelem(long_gs,3);
+% 
+% lat_gs = zeros(1,length(long_gs));
+% 
+% for i = 1:3:length(long_gs)
+%     lat_gs(i) = 65;
+%     lat_gs(i+1) = 75;
+%     lat_gs(i+2) = 85;
+%     
+% end
+% 
+% mean_el = zeros(1,length(lat_gs));
+lat_gs = [65]; %Ground station in Evenkiysky (Russia)
+long_gs = [-90];
 
 R = [22.2016]; %Rain attenuation coefficient [mm/h]
 R = repelem(R,length(lat_gs));
@@ -147,6 +152,8 @@ grid on;
 for k = 1:length(lat_gs)
     
     [azimuth, elevation, best_elevation, best_azimuth, best_sat_matrix(k,:), lambda_matrix(k,:), lambda_us_matrix(k,:)] = view_angles(t, lat_gs(k), long_gs(k), long, lat, r, re, El, lat_us(k),long_us(k));
+    
+%     mean_el(k) = mean(best_elevation);
     
     [CNtot(k,:),link_margin(k,:), CNtot_rain(k,:),link_margin_rain(k,:)]=link_budget(r,t,lambda_matrix(k,:),lambda_us_matrix(k,:), best_sat_matrix(k,:), R(k), best_elevation);
     %Plot of Azimuth 
@@ -240,3 +247,8 @@ for k = 1:length(lat_gs)
     grid on;
     
 end
+
+% [value, I] = max(mean_el);
+% disp("Best Ground Station at: ");
+% latitude_gs = lat_gs(I)
+% longitude_gs = long_gs(I)
