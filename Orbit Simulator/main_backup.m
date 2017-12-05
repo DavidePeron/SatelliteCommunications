@@ -47,24 +47,12 @@ raan = deg2rad(25);
 % lat_gs = [61.267865]; %Ground station in Evenkiysky (Russia)
 % long_gs = [-96.608223];
 
-long_gs = linspace(0,180, 19);
-long_gs = repelem(long_gs,3);
-
-lat_gs = zeros(1,length(long_gs));
-
-for i = 1:3:length(long_gs)
-    lat_gs(i) = 65;
-    lat_gs(i+1) = 75;
-    lat_gs(i+2) = 85;
-    
-end
-% lat_gs = [71]; %Ground station in Evenkiysky (Russia)
-% long_gs = [-75];
+lat_gs = [71]; %Ground station in Evenkiysky (Russia)
+long_gs = [-75];
 
 R = [22.2016]; %Rain attenuation coefficient [mm/h]
-R = repelem(R,length(lat_gs));
-lat_us = lat_gs; %user random positioned
-long_us = long_gs;
+lat_us = [40]; %user random positioned
+long_us = [-180];
 % raan_sat = [raan, raan + deg2rad(-242.4783429000001), raan + deg2rad(-122.1497972999974)];
 raan_sat = zeros(1,n_sat)+raan; % Initial raan vector
 t = 0:runspeed:T*n_rev; % time [s]
@@ -145,7 +133,7 @@ grid on;
 %% Azimuth estimation
 
 for k = 1:length(lat_gs)
-    
+
     [azimuth, elevation, best_elevation, best_azimuth, best_sat_matrix(k,:), lambda_matrix(k,:), lambda_us_matrix(k,:)] = view_angles(t, lat_gs(k), long_gs(k), long, lat, r, re, El, lat_us(k),long_us(k));
     
     [CNtot(k,:),link_margin(k,:), CNtot_rain(k,:),link_margin_rain(k,:)]=link_budget(r,t,lambda_matrix(k,:),lambda_us_matrix(k,:), best_sat_matrix(k,:), R(k), best_elevation);

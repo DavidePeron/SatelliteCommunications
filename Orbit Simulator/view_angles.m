@@ -32,7 +32,12 @@ function [azimuth, elevation, best_elevation, best_azimuth, best_sat, best_lambd
             end
             if lat{j}(i) > lat_gs && long{j}(i) > long_gs % North west
                 azimuth{j}(i) = 360 - a_az;
-            end    
+            end
+            
+            %Normalization of the Azimuth
+            if(azimuth{j}(i) > 360)
+                azimuth{j}(i) = azimuth{j}(i) - 360;
+            end
 
             b = 1+(re/r{j}(i))^2;
             c = 2*re/r{j}(i);
