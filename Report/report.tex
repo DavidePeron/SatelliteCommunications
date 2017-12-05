@@ -147,19 +147,68 @@
 		\input{orbits_constellation.tex}
 
 \section{Payload and Space Segment}
-		\lipsum[1]
+		For the space segment a payload a considerations on the transponders have been made based on the requirements that the mission has to satisfy: to be precise, the problem description requires a broadcast communication that guarantees a capacity of 5 Mbit in uplink and of 50 Mbit in downlink; moreover the communication has to allow the internet connection and video and voice call service.
 	\subsection{Communication Module}
-		\lipsum[1]
+		The first thing to do was to select the transponder size, which we fixed at 72 MHz. After that we decided the number of carriers in for the forward and the return link and the amplitude of the guard-band between the carriers. The resulting values are listed in \autoref{tab:commModule} and \autoref{fig:transp} shows a schematic representation of a transponder.
+
+		\begin{table}
+		\centering
+		\begin{tabular}{lr}
+		\toprule
+		Feature & Value\\
+		\midrule
+		Transponder size & 72 MHz\\
+		N carriers in forward link & 2\\
+		N carriers in return link & 6\\
+		Amplitude carriers in fw & 27.805 MHz\\
+		Amplitude carriers in rt & 2,732 MHz\\
+		Tot. fw link bandiwdth & 55.61 MHz\\
+		Tot. rt link bandwidth & 16.39 MHz\\
+		Guard-band & 3.6 MHz\\
+		Tot. bandwidth used & 450 MHz\\
+		\bottomrule 
+		\end{tabular}
+		\caption{Values for the communication module}
+		\label{tab:commModule}
+		\end{table}
+		
+		\begin{figure}
+		\centering
+		\includegraphics[width = .8\textwidth]{Transponder.png}
+		\caption{Representation of a transponder}
+		\label{fig:transp}
+		\end{figure}
+
+		Through these values the total number of transponder we have on the satellite is 12, 6 with horizontal polarization and 6 with the vertical one.
+
+	\subsection{Frequency Plan}
+After these considerations the structure of the Frequency Plan is automatically elaborated and here it is represented in \autoref{fig:freqPlan}
+
+		\begin{figure}
+		\centering
+		\includegraphics[width = .65\textwidth]{Frequencies.png}
+		\caption{Frequency plan for the communication module}
+		\label{fig:freqPlan}
+		\end{figure}
+
 	\subsection{Payload}
 		%\input{payload_fig.tex}
-\begin{sidewaysfigure}
-\centering
-\includegraphics[width = \textwidth]{Payload.png}
-\caption{Payload representaiton}
-\label{fig:payload}
-\end{sidewaysfigure}
+		The electronic part of the payload is composed by the two main sections of the \textbf{receiver block} and \textbf{repeater block}: in the receiver part, the signal is received, separated in polarization, filtered and amplified so as to be ready for the repeater part, in which it is channelized and further amplified. \autoref{fig.payload} shows the global representation of the payload.
+
+		\begin{sidewaysfigure}
+		\centering
+		\includegraphics[width = \textwidth]{Payload.png}
+		\caption{Payload representaiton}
+		\label{fig:payload}
+		\end{sidewaysfigure}
+
 		\subsubsection{Receiver Block}
-			\lipsum[1]
+			\begin{figure}
+			\centering
+			\includegraphics[width = .65\textwidth]{Frequencies.png}
+			\caption{Frequency plan for the communication module}
+			\label{fig:freqPlan}
+			\end{figure}
 		\subsubsection{Repeater Block}
 			\lipsum[1]
 	\subsection{Power Budget}
@@ -173,12 +222,12 @@
 \section{Ground Segment}
 	The ground segment is composed by a single \gls{gs} and all the mobile users moving around on the northern lands and 		seas of Russia and Europe. The reason for just one \gls{gs} is that, since we do not deploy the multibeam option, there is no 		necessity of having more than one \gls{gs}, because one is enough to correctly collect all the traffic coming from the satellite 		and toward it.
 	\subsection{Ground Station coordinates}
-		The coordinates of the \gls{gs} are:
+		The coordinates of the \gls{gs} are: \cri{Cambia valore quando Davide ha trovato un buon posto per la GS}
 		\begin{align}
-		lat &= 61.267865\\
+		lat &= 61.267865\\ 
 		long &= -96.608223\\
 		\end{align}
-		These coordinates have been chosen based on the elevation values: the coordinates listed above represent a point in 				Russia in the surrounding area of the subsatellite point of the apogee. In this way, the values of elevation are always 				substantially high, guaranteeing always a good visibility. Moreover, another factor is the rain attenuation, which is not 			much high in this region, as we can conclude from the respective value of $R$:
+		These coordinates have been chosen based on the elevation values: the coordinates listed above represent a point in 				Russia in the surrounding area of the subsatellite point of the apogee. In this way, the values of elevation are always 				substantially high, guaranteeing always a good visibility. Moreover, another factor is the rain attenuation, which is not 			much high in this region, as we can conclude from the respective value of $R$:  \cri{Cambia valore quando Davide ha trovato un buon posto per la GS}
 		\begin{equation}
 		R = 22.2016 \quad mm/h
 		\end{equation}
@@ -209,7 +258,7 @@
 		\end{table}
 
 		%Another aspect to consider is the fact that the variations in the azimuth values are very steep in a specific moment of the satellite revolution, and this brings as side effect the temporary suspension of the service for the time needed by the \gls{gs} to point properly the correct satellite in orbit (about 2 minutes).
-\cri{la metto sta frasae qui? a suo tempo il prof mi pare avesse detto che andava specificato, però a leggerla mi rattristo a pensare che offriamo un servizio che per 2 minuti al giorno sistematicamente non funziona}
+\cri{la metto sta frase qui? a suo tempo il prof mi pare avesse detto che andava specificato, però a leggerla mi rattristo a pensare che offriamo un servizio che per 2 minuti al giorno sistematicamente non funziona}
 	\subsection{User requirements}
 The user requirements are substantially the model of the antenna and the dimension of the dish: the model is identical to the ones used for the satellite and the \gls{gs}, so a reflector antenna with a single beam; the dish diameter is smaller in this case, for a matter of space and feasibility, and is of 1 m \cri{verifica valore}. There is no need, in this case, of specifying the position of the users since by definition they are mobile users.
 
