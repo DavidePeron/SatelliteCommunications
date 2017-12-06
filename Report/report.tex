@@ -105,6 +105,7 @@
 \newacronym[plural=MEO,longplural={Medium Earth Orbits}]{meo}{MEO}{Medium Earth Orbit}
 \newacronym[plural=HEO,longplural={High Elliptical Orbits}]{heo}{HEO}{High Elliptical Orbit}
 \newacronym[plural=GS,longplural={Ground Stations}]{gs}{GS}{Ground Station}
+\newacronym{eol}{EOL}{End Of Life}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% PREPARE TITLE
@@ -193,7 +194,7 @@ After these considerations the structure of the Frequency Plan is automatically 
 
 	\subsection{Payload}
 		%\input{payload_fig.tex}
-		The electronic part of the payload is composed by the two main sections of the \textbf{receiver block} and \textbf{repeater block}: in the receiver part, the signal is received, separated in polarization, filtered and amplified so as to be ready for the repeater part, in which it is channelized and further amplified. \autoref{fig:payload} shows the global representation of the payload.
+		The electronic part of the payload is composed by the two main sections of the \textbf{receiver block} and \textbf{repeater block}: in the first part, the signal is received, separated in polarization, filtered and amplified so as to be ready for the repeater part, in which it is channelized and further amplified. \autoref{fig:payload} shows the global representation of the payload.
 
 		\begin{sidewaysfigure}
 		\centering
@@ -205,53 +206,120 @@ After these considerations the structure of the Frequency Plan is automatically 
 		\subsubsection{Receiver Block}
 The main actions in which this block is involved are the \textbf{polarization separation} and the \textbf{frequency conversion}; \autoref{fig:receiver} shows accurately all the fundamental components of this first part.
 		\begin{itemize}
-		\item (1) is the polarization diplexer, which has the role of separating the received signal depending of its polarization; \autoref{receiver} only shows the path for one possible polarization, but in the complete payload scheme all the components that follow the diplexer have to be doubled up;
-		\item (2) is a low noise amplifier necessary for a first recovering of the received signal;
-		\item (3) is the frequency oscillator: its values change with respect to the frequency we need to convert, \autoref{tab:oscillator} shows them;
-		\item (4) is the High Power Amplifier necessary to amplify the converted signal before being channelized in the repeater section.
+		\item (1) is the polarization diplexer, which has the role of separating the received signal depending of its polarization; \autoref{fig:receiver} only shows the path for one possible polarization, but in the complete payload scheme all the components that follow the diplexer have to be doubled up;
+		\item (2) is a low noise amplifier necessary for a first recovering of the received signal; this amplifier is the main element which determines the figure of merit G/T of the transponder and thus it must have a low noise temperature (in this case is estimated of 438,45 K with a noise figure of 4 dB) and a high gain (in this case of 30 dB) in order to limit the role of the noise of subsequent stages.
+		\item (3) is the frequency oscillator: its values change with respect to the frequency we need to convert, as shown in \autoref{tab:oscillator}. For the oscillator we have to monitor also other parameters like the conversion losses (normally in the order of 5 - 10 dB, we supposed the worst case of 10 dB and so a noise temperature of 2610 K) and the stability of the frequency \cite{Maral2017};
+		\item (4) is the High Power Amplifier necessary to amplify the converted signal before being channelized in the repeater section;
+		\item we also have to consider the role of the cables and the losses they bring inside the estimations; in our case we supposed a loss due to the cables of about 3 dB and an associate noise temperature of 288.63 K.
 		\end{itemize}
-		\begin{table}
-		\centering
-		\begin{tabular}{lr}
-		\toprule
-		Downlink frequency & Oscillator frequency\\
-		\midrule
-		$10.95 \leq f_d \leq 11.2$ GHz & $1.5$ GHz\\
-		$11.54 \leq f_d \leq 11.7$ GHz & $2.58$ GHz\\
-		$12.5 \leq f_d \leq 12.75$ GHz & $3.8$ GHz\\
-		\bottomrule
-		\end{tabular}
-		\caption{Oscillator frequency values depending of the downlink frequency needed}
-		\label{tab:oscillator}
+			\begin{table}
+			\centering
+			\begin{tabular}{lr}
+			\toprule
+			Downlink frequency & Oscillator frequency\\
+			\midrule
+			$10.95 \leq f_d \leq 11.2$ GHz & $1.5$ GHz\\
+			$11.54 \leq f_d \leq 11.7$ GHz & $2.58$ GHz\\
+			$12.5 \leq f_d \leq 12.75$ GHz & $3.8$ GHz\\
+			\bottomrule
+			\end{tabular}
+			\caption{Oscillator frequency values depending of the Downlink frequency needed for an uplink frequency between 14 and 14.5 GHz}
+			\label{tab:oscillator}
 		\end{table}
-		\begin{figure}
-		\centering
-		\includegraphics[width = .8\textwidth]{payload_receiver.pdf}
-		\caption{Payload receiver part}
-		\label{fig:receiver}
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width = \textwidth]{payload_receiver.pdf}
+			\caption{Payload receiver part}
+			\label{fig:receiver}
 		\end{figure}
+For this block the redundancy is of 1/2.
 
 		\subsubsection{Repeater Block}
-In the repeater block the channelization part is present: for that the input/output multiplexers are needed. We selected 2 input and 2 output multiplexers, each one having 3 channels in order to have one channel per carrier received\footnote{we remember that the path described here is still referring to one single polarization. At the end of the description, all the elements described have to be doubled up in number}. For each channel of the multiplexers we have:
-\begin{itemize}
-\item (8) which is a channel amplifier;
-\item (9) which is an Automatic Level Control module: a device needed to guarantee a constant power value as input of (10);
-\item (10) which is the amplifier module, composed by the EPS and the TWT sections. The output power value that we supposed for the TWTA section is 20W .
-\end{itemize}
-			\begin{figure}
-			\centering
-			\includegraphics[width = .8\textwidth]{payload_repeater.pdf}
-			\caption{Payload repeater part}
-			\label{fig:repeater}
+			In the repeater block the channelization part is present and, for that, the input/output multiplexers are needed. We selected 2 input and 2 output multiplexers, each one having 3 channels in order to have one channel per carrier received\footnote{we remember that the path described here is still referring to one single polarization. At the end of the description, all the elements described have to be doubled up in number}. Inside the multiplexers the main elements are the band-pass filters and the circulators used to separate the frequency channels, these ones are the main cause of losses inside the multiplexers since they depend on the number of times the signal concerned passes through a circulator (the loss is in the order of 0.1 dB).
+
+In addition to this, for each channel of the multiplexers we then have:
+			\begin{itemize}
+			\item (8), a channel amplifier;
+			\item (9), an Automatic Level Control module: a device needed to guarantee a constant power value as input of 					(10);
+			\item (10), the amplifier module, composed by the EPS and the TWT sections which together form the Travelling Wave Tube Amplifier (TWTA). The output power value that we supposed for the TWTA section is 20W \cite{Maral2017}.
+			\end{itemize}
+			\begin{figure}[h]
+				\centering
+				\includegraphics[width = \textwidth]{payload_repeater.pdf}
+				\caption{Payload repeater part}
+				\label{fig:repeater}
 			\end{figure}
+For this block the redundancy is a 8/12 redundancy ring.
+
 	\subsection{Power Budget}
+	The power budget mainly depends on the power required by the TWTA amplifiers in order to transmit the signal to the Earth. As can be seen from the chart in \autoref{fig:powerDistr}, the fraction of power that the communication subsystem requires is about 75 \%, all the other utilities uniformly share the remaining power needed.
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width = .7\textwidth]{powerDistr.png}
+		\caption{Power distribution among the subsystems in percentage}
+		\label{fig:powerDistr}
+	\end{figure}
 		\subsubsection{Required Power}
-			\lipsum[1]
+			To estimate the required power we supposed to be in the worst case (end of life of the satellite) and followed the steps below:
+	\begin{itemize}
+	\item Estimate the \gls{eol} efficiency for the solar panel;
+	\item Estimate the \gls{eol} efficiency for the TWTA module;
+	\item Estimate the \gls{eol} efficiency for the EPC module;
+	\item Estimate the total power required for the transponders;
+	\item Estimate the total power required for the system;
+	\end{itemize}
+\begin{description}
+	\item[Solar panel efficiency] Given an expected life of 15 years, a degrading coefficient $\frac{1}{\tau}$ of $0.043$ 1/s and an initial efficiency of 17 \%, the \gls{eol} solar panel efficiency is:
+		\begin{equation}
+			\eta_{SP_{EOL}} = \eta_{BOL}e^{-0.043T} \rightarrow \eta_{SP_{EOL}} = \frac{17}{100}e^{-0.043\times 15} = 8.9 \%
+		\end{equation}
+	\item[TWT efficiency] The same expression can be used to estimate the \gls{eol} efficiency for the TWTA, supposing a $\eta_{TW_{BOL}} = 60\%$: in particular, if we suppose that the efficiency value will be reduced of 10\% after 10 years (6\% of decrement), we can find the degradation coefficient $\frac{1}{\tau}$ as:
+		\begin{equation}
+		60 \% - 6 \% =60 \% e^{\frac{-10}{\tau}} \rightarrow \tau = \frac{-10}{log_e\frac{54}{60}} = 94.91 \quad s^{-1}
+		\end{equation}
+		and so the \gls{eol} efficiency:
+		\begin{equation}
+		\eta_{TW_{EOL}} = 60e^{\frac{-15}{94.91}} = 51.23 \%
+		\end{equation}
+	\item[EPC efficiency] Through the same procedure we obtain also the efficiency for the EPC segment:
+		\begin{equation}
+		\eta_{EPC_{EOL}} = 81.2 \%
+		\end{equation}
+	\item[Total power required for the transponders] With all the efficiency values previously found we can now estimate the total power used by the satellite in the worst case, supposing an output power at saturation for the TWT module of 250 W:
+		\begin{align}
+		P_{in_{TW}} &= \frac{P_{out_{TW}}}{\eta_{TW_{EOL}}} = 195.198 \text{ W}\\
+		P_{in_{EPC}} &= \frac{P_{in_{TW}}}{\eta_{EPC_{EOL}}} = 240.39 \text{ W}\\
+		P_{transp} &= P_{in_{EPC}} \times N_{transp} = 240.39 \times 12 = 2.885 \text{ kW}\\
+		\end{align}
+		Moreover, since this power consists in the 75\% of the total power necessary for the satellite, the total power for the satellite is:
+		\begin{equation}
+		P_{tot} = \frac{P_{transp}}{75\%} = 3.846 \text{ kW}
+		\end{equation}
+\end{description}
 		\subsubsection{Solar Panels specifications}
-			\lipsum[1]
+			Once we have found the total power that the satellite needs at the worst case, the estimation of the area for the solar panels is made deploying the following expression:
+\begin{equation}
+A_{panel} = \frac{P_{tot} s}{f \Phi \eta_{SP_{EOL}} s (1 - l)}
+\end{equation}
+Where:
+\begin{itemize}
+\item $s$ is the area of a single cell;
+\item $\Phi$ is the solar flux, supposed to be of 1215,74 $W/m^2$ in the farthest point of the satellite orbit (based on the observation of \autoref{fig:flux});
+\item $f$ is the filling efficiency, here of the order of 90 \%;
+\item $l$ are general losses due to cabling and cover and typical values are 10 to 15 \% (here we selected 15 \% for a worst-case analysis);
+\end{itemize}
+\begin{figure}[h]
+\centering
+\includegraphics[width = .7\textwidth]{flux.png}
+\caption{Combined influence of sun declination and distance variation}
+\label{fig:flux}
+\end{figure}
+And from it the final value for the solar panel area of our satellite is:
+\begin{equation}
+A = 46.46 \text{ $m^2$}
+\end{equation}
 	\subsection{Weight Estimation}
 		\lipsum[1]
-
 \section{Ground Segment}
 	The ground segment is composed by a single \gls{gs} and all the mobile users moving around on the northern lands and 		seas of Russia and Europe. The reason for just one \gls{gs} is that, since we do not deploy the multibeam option, there is no 		necessity of having more than one \gls{gs}, because one is enough to correctly collect all the traffic coming from the satellite 		and toward it.
 	\subsection{Ground Station coordinates}
@@ -456,7 +524,7 @@ Cost_{Total} = Cost_{Launch} + Cost_{Spacecraft} = \cri{Mettere costo finale} \t
 
 
 
-
-
+\bibliographystyle{IEEEtran}
+\bibliography{IEEEabrv,bibliography}
 
 \end{document}
