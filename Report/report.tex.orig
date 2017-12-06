@@ -104,12 +104,16 @@
 \newacronym[plural=LEO,longplural={Low Earth Orbits}]{leo}{LEO}{Low Earth Orbit}
 \newacronym[plural=MEO,longplural={Medium Earth Orbits}]{meo}{MEO}{Medium Earth Orbit}
 \newacronym[plural=HEO,longplural={High Elliptical Orbits}]{heo}{HEO}{High Elliptical Orbit}
+<<<<<<< HEAD
 \newacronym{eci}{ECI}{Earth Centered Inertial}
 \newacronym{lla}{LLA}{geodetic latitude, longitude, altitude coordinates}
-\newacronym[plural=GS,longplural={Ground Stations}]{gs}{GS}{Ground Station}
+\newacronym{gs}{GS}{Ground Station}
 \newacronym{raan}{RAAN}{Right Ascending of Ascension Node}
 \newacronym{eirp}{EIRP}{Effective Isotropic Radiated Power}
+=======
+\newacronym[plural=GS,longplural={Ground Stations}]{gs}{GS}{Ground Station}
 \newacronym{eol}{EOL}{End Of Life}
+>>>>>>> Cri
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% PREPARE TITLE
@@ -327,9 +331,14 @@ A = 46.46 \text{ $m^2$}
 \end{equation}
 	\subsection{Weight Estimation}
 		\lipsum[1]
+<<<<<<< HEAD
 
 \section{Ground Segment}\label{sec:ground_segment}
 	\lipsum[1]
+=======
+\section{Ground Segment}
+	The ground segment is composed by a single \gls{gs} and all the mobile users moving around on the northern lands and 		seas of Russia and Europe. The reason for just one \gls{gs} is that, since we do not deploy the multibeam option, there is no 		necessity of having more than one \gls{gs}, because one is enough to correctly collect all the traffic coming from the satellite 		and toward it.
+>>>>>>> Cri
 	\subsection{Ground Station coordinates}
 		The coordinates of the \gls{gs} are: \cri{Cambia valore quando Davide ha trovato un buon posto per la GS}
 		\begin{align}
@@ -377,7 +386,7 @@ The user requirements are substantially the model of the antenna and the dimensi
 \section{Cost Estimation}
 	\subsection{Spacecraft cost}
 		The spacecraft cost can be estimated depending on several parameters and criteria, such as the type of mission, the 				subsystem considered and the unit over which calculate the cost. In our specific case we concentrated on the cost analysis 		for a communication-type satellite and review it for every subsystem of the spacecraft and its launch procedure.\\
-		
+
 		The subsystems analyzed  are the following:
 		\begin{itemize}
 			\item Attitude determination and Control subsystem (ADCS)
@@ -392,40 +401,40 @@ The user requirements are substantially the model of the antenna and the dimensi
 			\item Telemetry tracking and command (TT\&C)
 		\end{itemize}
 		In particular, \autoref{fig:torta} shows the cost percentage that each system represents: from it we can see that the 				System engineering is the most important item, followed by the EPS and the IA\&T subsystems. Moreover, 						\autoref{fig:distribution} lists the different sections, depending on the type of mission the satellite is intended to 					accomplish, with their standard deviations; tables \ref{fig:mission} and \ref{fig:mission_pound}, instead, show the total 			cost depending on the mission type and the total cost per pound.
-		
+
 		\begin{figure}
 			\centering
 			\includegraphics[width = .7\textwidth]{Torta.png}
 			\caption{Communication spacecraft cost composition}
 			\label{fig:torta}
 		\end{figure}
-		
+
 		\begin{figure}
 			\centering
 			\includegraphics[width = 1\textwidth]{Standard_dev.png}
 			\caption{Communication spacecraft cost composition: averages and standard deviations}
 			\label{fig:distribution}
 		\end{figure}
-		
+
 		\begin{figure}
 			\centering
 			\begin{minipage}{1\textwidth}
 			\centering
-			\includegraphics[width = .95\textwidth]{mission.png}
+			\includegraphics[width = .95\textwidth]{Mission.png}
 			\caption{Total spacecraft cost}
 			\label{fig:mission}
 			\end{minipage}
 			\hspace{20mm}
 			\begin{minipage}{.95\textwidth}
 			\centering
-			\includegraphics[width = .95\textwidth]{mission_pound.png}
+			\includegraphics[width = .95\textwidth]{Mission_pound.png}
 			\caption{Total spacecraft cost per pound}
 			\label{fig:mission_pound}
 			\end{minipage}
 		\end{figure}
-		
+
 		Regarding the cost per subsystem, \autoref{tab:systems1} and \autoref{tab:systems2} show the different cost each 				subsystem is intended to have:
-		
+
 		\begin{table}
 			\centering
 			\begin{tabular}{ccc}
@@ -476,7 +485,7 @@ The user requirements are substantially the model of the antenna and the dimensi
 			Structure   & 15,94  \euro/Kg     & $\times NCHILI +$\\
 			SEPM        & 12167,05 \euro     & $+$\\
 			Thermal    & 903,45 \euro        & $+$\\
-			TT\&C       & 4423,24 \euro      & $+$\\ 
+			TT\&C       & 4423,24 \euro      & $+$\\
 			ADCS        & 94,70 \euro/Kg     & $\times NCHILI +$\\
 			Propulsion & 54,68   \euro/Kg   & $\times NCHILI +$\\
 			Communication ($10 < ch < 25$) & 1534,45 \euro/ch & $\times 12 ch =$\\
@@ -506,6 +515,8 @@ Cost_{Total} = Cost_{Launch} + Cost_{Spacecraft} = \cri{Mettere costo finale} \t
 \section{Final considerations and conclusions}
 	\lipsum[1]
 
+<<<<<<< HEAD
+=======
 
 
 
@@ -525,6 +536,7 @@ Cost_{Total} = Cost_{Launch} + Cost_{Spacecraft} = \cri{Mettere costo finale} \t
 
 
 
+>>>>>>> Cri
 \bibliographystyle{IEEEtran}
 \bibliography{IEEEabrv,bibliography}
 
