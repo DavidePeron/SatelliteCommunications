@@ -63,10 +63,10 @@ raan = deg2rad(25);
 % end
 % 
 % mean_el = zeros(1,length(lat_gs));
-lat_gs = [65]; %Ground station in Evenkiysky (Russia)
+lat_gs = [65]; %Ground station position
 long_gs = [-90];
 
-R = [22.2016]; %Rain attenuation coefficient [mm/h]
+R = [11.4919]; %Rain attenuation coefficient [mm/h]
 R = repelem(R,length(lat_gs));
 lat_us = lat_gs; %user random positioned
 long_us = long_gs;

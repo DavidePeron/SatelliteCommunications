@@ -107,6 +107,7 @@
 \newacronym{lla}{LLA}{geodetic latitude, longitude, altitude coordinates}
 \newacronym{gs}{GS}{Ground Station}
 \newacronym{raan}{RAAN}{Right Ascending of Ascension Node}
+\newacronym{eirp}{EIRP}{Effective Isotropic Radiated Power}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% PREPARE TITLE
@@ -169,7 +170,7 @@
 	\subsection{Weight Estimation}
 		\lipsum[1]
 
-\section{Ground Segment}
+\section{Ground Segment}\label{sec:ground_segment}
 	\lipsum[1]
 	\subsection{Ground Station coordinates}
 		\lipsum[1]
@@ -178,14 +179,7 @@
 	\subsection{User requirements}
 
 \section{Link Budget}
-	\subsection{Parameters setting and estimation}
-		\subsubsection{Antenna Parameters}
-		\subsubsection{Effective Isotropic Radiated Power(EIRP)}
-		\subsubsection{Losses}
-	\subsection{Uplink}
-	\subsection{Downlink}
-	\subsection{Overall Link Budget}
-\lipsum[1]
+	\input{link_budget.tex}
 
 \section{Cost Estimation}
 	\subsection{Spacecraft cost}
@@ -319,26 +313,7 @@ Cost_{Total} = Cost_{Launch} + Cost_{Spacecraft} = \cri{Mettere costo finale} \t
 \section{Final considerations and conclusions}
 	\lipsum[1]
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+\bibliographystyle{IEEEtran}
+\bibliography{IEEEabrv,bibliography}
 
 \end{document}
