@@ -59,8 +59,8 @@ The main actions in which this block is involved are the \textbf{polarization se
 \label{fig:payload}
 \end{sidewaysfigure}
 \item (3) is the frequency oscillator: its values change with respect to the frequency we need to convert, as shown in \autoref{tab:oscillator}. For the oscillator we have to monitor also other parameters like the conversion losses (normally in the order of 5 - 10 dB, we supposed the worst case of 10 dB and so a noise temperature of 2610 K) and the stability of the frequency \cite{Maral2017};
-\item (4) is the High Power Amplifier necessary to amplify the converted signal before being channelized in the repeater section;
-\item we also have to consider the role of the cables and the losses they bring inside the estimations; in our case we supposed a loss due to the cables of about 3 dB and an associate noise temperature of 288.63 K.
+\item (4) is the \gls{hpa} necessary to amplify the converted signal before being channelized in the repeater section;
+\item we also have to consider the role of the cables and the losses they bring inside the estimations; in our case we supposed a loss due to the cables of about 3 dB \cite{Ippolito17} and an associate noise temperature of 288.63 K.
 \end{itemize}
 	\begin{table}
 	\centering
@@ -85,7 +85,7 @@ The main actions in which this block is involved are the \textbf{polarization se
 For this block the redundancy is of 1/2.
 
 \subsubsection{Repeater Block}
-	In the repeater block the channelization part is present and, for that, the input/output multiplexers are needed. We selected 2 input and 2 output multiplexers, each one having 3 channels in order to have one channel per carrier received\footnote{we remember that the path described here is still referring to one single polarization. At the end of the description, all the elements described have to be doubled up in number}. Inside the multiplexers the main elements are the band-pass filters and the circulators used to separate the frequency channels, these ones are the main cause of losses inside the multiplexers since they depend on the number of times the signal concerned passes through a circulator (the loss is in the order of 0.1 dB).
+	In the repeater block the channelization part is present and, for that, the input/output multiplexers are needed. We selected 2 input and 2 output multiplexers, each one having 3 channels in order to have one channel per carrier received\footnote{we remember that the path described here is still referring to one single polarization. At the end of the description, all the elements described have to be doubled up in number}. Inside the multiplexers the main elements are the band-pass filters and the circulators used to separate the frequency channels, these ones are the main cause of losses inside the multiplexers since they depend on the number of times the signal concerned passes through a circulator (the loss is in the order of 0.1 dB). \cite{Maral2017}
 
 In addition to this, for each channel of the multiplexers we then have:
 	\begin{itemize}
@@ -102,7 +102,7 @@ In addition to this, for each channel of the multiplexers we then have:
 For this block the redundancy is a 8/12 redundancy ring.
 
 \subsection{Power Budget}
-The power budget mainly depends on the power required by the TWTA amplifiers in order to transmit the signal to the Earth. As can be seen from the chart in \autoref{fig:powerDistr}, the fraction of power that the communication subsystem requires is about 75 \%, all the other utilities uniformly share the remaining power needed.
+The power budget mainly depends on the power required by the TWTA amplifiers in order to transmit the signal to the Earth. As can be seen from the chart in \autoref{fig:powerDistr}, the fraction of power that the communication subsystem requires is about 75 \%, all the other utilities uniformly share the remaining power needed \cite{Miguel17}.
 \begin{figure}[h]
 \centering
 \includegraphics[width = .7\textwidth]{powerDistr.png}
@@ -123,7 +123,7 @@ The power budget mainly depends on the power required by the TWTA amplifiers in 
 \begin{equation}
 	\eta_{SP_{EOL}} = \eta_{BOL}e^{-0.043T} \rightarrow \eta_{SP_{EOL}} = \frac{17}{100}e^{-0.043\times 15} = 8.9 \%
 \end{equation}
-\item[TWT efficiency] The same expression can be used to estimate the \gls{eol} efficiency for the TWTA, supposing a $\eta_{TW_{BOL}} = 60\%$: in particular, if we suppose that the efficiency value will be reduced of 10\% after 10 years (6\% of decrement), we can find the degradation coefficient $\frac{1}{\tau}$ as:
+\item[TWT efficiency] The same expression can be used to estimate the \gls{eol} efficiency for the TWTA, supposing a $\eta_{TW_{BOL}} = 60\%$: in particular, if we suppose that the efficiency value will be reduced of 10\% after 10 years (6\% of decrement)\cite{Miguel17}, we can find the degradation coefficient $\frac{1}{\tau}$ as:
 \begin{equation}
 60 \% - 6 \% =60 \% e^{\frac{-10}{\tau}} \rightarrow \tau = \frac{-10}{log_e\frac{54}{60}} = 94.91 \quad s^{-1}
 \end{equation}
