@@ -5,7 +5,7 @@ The ground segment is composed by a single \gls{gs} and all the mobile users mov
 	lat &= 65\\
 	long &= -90\\
 	\end{align}
-	These coordinates have been chosen based on the elevation values: the coordinates listed above represent a point in 				Russia in the surrounding area of the subsatellite point of the apogee. In this way, the values of elevation are always 				substantially high, guaranteeing always a good visibility. Moreover, another factor is the rain attenuation, which is not 			much high in this region, as we can conclude from the respective value of $R$: 
+	These coordinates have been chosen based on the elevation values: the coordinates listed above represent a point in 				Russia in the surrounding area of the subsatellite point of the apogee. In this way, the values of elevation are always 				substantially high, guaranteeing always a good visibility. Moreover, another factor is the rain attenuation, which is not 			much high in this region, as we can conclude from the respective value of $R$:
 	\begin{equation}
 	R = 11.4919 \quad mm/h
 	\end{equation}
@@ -18,7 +18,7 @@ The ground segment is composed by a single \gls{gs} and all the mobile users mov
 
 	The Internet connection is the most important (if not the only one) reason for the existence of the \gls{gs}, since one of 			the problem requirements is indeed the possibility of video calls and other internet services.
 
-	For the antenna model we chose a reflector antenna with a single circular beam; the antenna parameters are 					listed in \autoref{tab:antennaParam}
+	For the antenna model we chose a reflector antenna with a single circular beam; the antenna parameters are listed in \autoref{tab:antennaParam}.
 	\begin{table}
 		\centering
 		\begin{tabular}{lr}
@@ -28,14 +28,13 @@ The ground segment is composed by a single \gls{gs} and all the mobile users mov
 		Frequency Band & Ku Band\\
 		Dish diameter D & 6 m\\
 		Efficiency & 0.6\\
-		IBO & -0.5 \cri{può essere considerato un parametro d'antenna?}\\
 		\bottomrule
 		\end{tabular}
 		\caption{\gls{gs} antenna specifications}
 		\label{tab:antennaParam}
 	\end{table}
 
-	%Another aspect to consider is the fact that the variations in the azimuth values are very steep in a specific moment of the satellite revolution, and this brings as side effect the temporary suspension of the service for the time needed by the \gls{gs} to point properly the correct satellite in orbit (about 2 minutes).
-\cri{la metto sta frase qui? a suo tempo il prof mi pare avesse detto che andava specificato, però a leggerla mi rattristo a pensare che offriamo un servizio che per 2 minuti al giorno sistematicamente non funziona}
+	Another aspect to consider is the fact that the variations in the azimuth values are very steep in a specific moment of the satellite revolution, and this brings as side effect the temporary suspension of the service for the time needed by the \gls{gs} to point properly the correct satellite in orbit (about 2 minutes).
+	To avoid this problem, two antennas in the \gls{gs} can be used.
 \subsection{User requirements}
-The user requirements are substantially the model of the antenna and the dimension of the dish: the model is identical to the ones used for the satellite and the \gls{gs}, so a reflector antenna with a single beam; the dish diameter is smaller in this case, for a matter of space and feasibility, and is of 1 m \cri{verifica valore}. There is no need, in this case, of specifying the position of the users since by definition they are mobile users.
+The user requirements are substantially the model of the antenna and the dimension of the dish: the model is identical to the ones used for the satellite and the \gls{gs}, so a reflector antenna with a single beam; the dish diameter is smaller in this case, for a matter of space and feasibility, and is of 1 m. There is no need, in this case, of specifying the position of the users since by definition they are mobile users.
