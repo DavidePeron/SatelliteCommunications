@@ -146,6 +146,7 @@ In the first part, the parameters used in the calculation are presented and disc
 	\begin{equation} \label{eq:up_link}
 		\begin{split}
 			\bigg(\frac{C}{N}\bigg)_U &= EIRP_{gs} - IBO - L_U + \bigg(\frac{G}{T}\bigg)_{sat} - [k]_{dB} - B_{IF}\\
+			&and\\
 			L_U &= L_{PL} + L_{rain} + L_{pointing} + L_{gas}
 		\end{split}
 	\end{equation}
@@ -159,6 +160,22 @@ In the first part, the parameters used in the calculation are presented and disc
 		T_S = T_A^{SAT} + t_{LNA} + \frac{T_{CABLE}}{G_{LNA}} + \frac{T_{DC}}{G_{LNA}\cdot G_{CABLE}}
 	\end{equation}
 \subsection{Downlink}
+	The Downlink link budget is calculated as in \autoref{eq:down_link}.
+	\begin{equation}
+	\begin{split}
+			\bigg(\frac{C}{N}\bigg)_U &= EIRP_{down} - OBO - L_D + \bigg(\frac{G}{T}\bigg)_{user} - [k]_{dB} - B_{IF}\\
+	&and\\
+			L_D &= L_{PL} + L_{rain} + L_{pointing} + L_{gas}
+	\end{split}
+	\label{eq:down_link}
+	\end{equation}
+	In that equation $EIRP_{down}$ is the \gls{eirp} trasmitted by the gateway and $(G/T)_{sat}$ is the \textit{Gain-over-Temperature} ratio of the user. $k$ and $B_{IF}$ remain the same values we also used for the Uplink link budget, while $L_D$ now represents the losses in the downlink segment.
+
+	$(G/T)_{user}$ is computed as the difference (in dB) between the gain of the receiving antenna and the ground station system temperature $T_{gs}$, as it was for the Uplink case, but this time the Friis formula involves a different antenna temperature. In fact now we are dealing with the user station antenna and this is the reason of the element $T_A^{USER}$ in \autoref{eq:friis}. The formula brings to a user station temperature value of $T_{gs} = 523.94 K$ and a corresponding value for the user figure of merit of $\bigg(\frac{G}{T}\bigg)_{user} = 11.91$ dB
+
+	\begin{equation}\label{eq:friis}
+		T_{gs} = T_A^{USER} + t_{LNA} + \frac{T_{CABLE}}{G_{LNA}} + \frac{T_{DC}}{G_{LNA}\cdot G_{CABLE}}
+	\end{equation}
 \subsection{Overall Link Budget}
 Once we calculate the Uplink link budget and the Downlink one, we have to put them together to find the overall link budget with the formula in \autoref{eq:link_budget_formula}, where $C/IM$ is the \textit{carrier-to-intermodulation} noise and in this project is put to $23dB$.
 
