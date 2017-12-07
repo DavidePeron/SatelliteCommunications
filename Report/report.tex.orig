@@ -104,16 +104,14 @@
 \newacronym[plural=LEO,longplural={Low Earth Orbits}]{leo}{LEO}{Low Earth Orbit}
 \newacronym[plural=MEO,longplural={Medium Earth Orbits}]{meo}{MEO}{Medium Earth Orbit}
 \newacronym[plural=HEO,longplural={High Elliptical Orbits}]{heo}{HEO}{High Elliptical Orbit}
-<<<<<<< HEAD
 \newacronym{eci}{ECI}{Earth Centered Inertial}
 \newacronym{lla}{LLA}{geodetic latitude, longitude, altitude coordinates}
-\newacronym{gs}{GS}{Ground Station}
+\newacronym[plural=GS,longplural={Ground Stations}]{gs}{GS}{Ground Station}
 \newacronym{raan}{RAAN}{Right Ascending of Ascension Node}
 \newacronym{eirp}{EIRP}{Effective Isotropic Radiated Power}
-=======
-\newacronym[plural=GS,longplural={Ground Stations}]{gs}{GS}{Ground Station}
 \newacronym{eol}{EOL}{End Of Life}
->>>>>>> Cri
+\newacronym{eirp}{EIRP}{Emitted Isotropic Radiated Power}
+\newacronym{hpa}{HPA}{High Power Amplifier}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% PREPARE TITLE
@@ -159,6 +157,20 @@
 		\input{orbits_constellation.tex}
 
 \section{Payload and Space Segment}
+<<<<<<< HEAD
+	\input{payload.tex}
+\section{Ground Segment}\label{sec:ground_segment}
+	\input{ground_segment.tex}
+
+\section{Link Budget}
+	\input{link_budget.tex}
+
+\section{Cost Estimation}
+	\input{cost.tex}
+
+\section{Final considerations and conclusions}
+	\lipsum[1]
+=======
 		For the space segment a payload a considerations on the transponders have been made based on the requirements that the mission has to satisfy: to be precise, the problem description requires a broadcast communication that guarantees a capacity of 5 Mbit in uplink and of 50 Mbit in downlink; moreover the communication has to allow the internet connection and video and voice call service.
 	\subsection{Communication Module}
 		The first thing to do was to select the transponder size, which we fixed at 72 MHz. After that we decided the number of carriers in for the forward and the return link and the amplitude of the guard-band between the carriers. The resulting values are listed in \autoref{tab:commModule} and \autoref{fig:transp} shows a schematic representation of a transponder.
@@ -220,8 +232,8 @@ The main actions in which this block is involved are the \textbf{polarization se
 		\label{fig:payload}
 		\end{sidewaysfigure}
 		\item (3) is the frequency oscillator: its values change with respect to the frequency we need to convert, as shown in \autoref{tab:oscillator}. For the oscillator we have to monitor also other parameters like the conversion losses (normally in the order of 5 - 10 dB, we supposed the worst case of 10 dB and so a noise temperature of 2610 K) and the stability of the frequency \cite{Maral2017};	
-		\item (4) is the High Power Amplifier necessary to amplify the converted signal before being channelized in the repeater section;
-		\item we also have to consider the role of the cables and the losses they bring inside the estimations; in our case we supposed a loss due to the cables of about 3 dB and an associate noise temperature of 288.63 K.
+		\item (4) is the \gls{hpa} necessary to amplify the converted signal before being channelized in the repeater section;
+		\item we also have to consider the role of the cables and the losses they bring inside the estimations; in our case we supposed a loss due to the cables of about 3 dB \cite{Ippolito17} and an associate noise temperature of 288.63 K.
 		\end{itemize}
 			\begin{table}
 			\centering
@@ -246,7 +258,7 @@ The main actions in which this block is involved are the \textbf{polarization se
 For this block the redundancy is of 1/2.
 
 		\subsubsection{Repeater Block}
-			In the repeater block the channelization part is present and, for that, the input/output multiplexers are needed. We selected 2 input and 2 output multiplexers, each one having 3 channels in order to have one channel per carrier received\footnote{we remember that the path described here is still referring to one single polarization. At the end of the description, all the elements described have to be doubled up in number}. Inside the multiplexers the main elements are the band-pass filters and the circulators used to separate the frequency channels, these ones are the main cause of losses inside the multiplexers since they depend on the number of times the signal concerned passes through a circulator (the loss is in the order of 0.1 dB).
+			In the repeater block the channelization part is present and, for that, the input/output multiplexers are needed. We selected 2 input and 2 output multiplexers, each one having 3 channels in order to have one channel per carrier received\footnote{we remember that the path described here is still referring to one single polarization. At the end of the description, all the elements described have to be doubled up in number}. Inside the multiplexers the main elements are the band-pass filters and the circulators used to separate the frequency channels, these ones are the main cause of losses inside the multiplexers since they depend on the number of times the signal concerned passes through a circulator (the loss is in the order of 0.1 dB). \cite{Maral2017}
 
 In addition to this, for each channel of the multiplexers we then have:
 			\begin{itemize}
@@ -263,7 +275,7 @@ In addition to this, for each channel of the multiplexers we then have:
 For this block the redundancy is a 8/12 redundancy ring.
 
 	\subsection{Power Budget}
-	The power budget mainly depends on the power required by the TWTA amplifiers in order to transmit the signal to the Earth. As can be seen from the chart in \autoref{fig:powerDistr}, the fraction of power that the communication subsystem requires is about 75 \%, all the other utilities uniformly share the remaining power needed.
+	The power budget mainly depends on the power required by the TWTA amplifiers in order to transmit the signal to the Earth. As can be seen from the chart in \autoref{fig:powerDistr}, the fraction of power that the communication subsystem requires is about 75 \%, all the other utilities uniformly share the remaining power needed \cite{Miguel17}.
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width = .7\textwidth]{powerDistr.png}
@@ -280,11 +292,11 @@ For this block the redundancy is a 8/12 redundancy ring.
 	\item Estimate the total power required for the system;
 	\end{itemize}
 \begin{description}
-	\item[Solar panel efficiency] Given an expected life of 15 years, a degrading coefficient $\frac{1}{\tau}$ of $0.043$ 1/s and an initial efficiency of 17 \%, the \gls{eol} solar panel efficiency is:
+	\item[Solar panel efficiency] Given an expected life of 15 years, a degrading coefficient $\frac{1}{\tau}$ of $0.043$ 1/s and an initial efficiency of 17 \% \cite{Miguel17}, the \gls{eol} solar panel efficiency is:
 		\begin{equation}
 			\eta_{SP_{EOL}} = \eta_{BOL}e^{-0.043T} \rightarrow \eta_{SP_{EOL}} = \frac{17}{100}e^{-0.043\times 15} = 8.9 \%
 		\end{equation}
-	\item[TWT efficiency] The same expression can be used to estimate the \gls{eol} efficiency for the TWTA, supposing a $\eta_{TW_{BOL}} = 60\%$: in particular, if we suppose that the efficiency value will be reduced of 10\% after 10 years (6\% of decrement), we can find the degradation coefficient $\frac{1}{\tau}$ as:
+	\item[TWT efficiency] The same expression can be used to estimate the \gls{eol} efficiency for the TWTA, supposing a $\eta_{TW_{BOL}} = 60\%$: in particular, if we suppose that the efficiency value will be reduced of 10\% after 10 years (6\% of decrement) \cite{Miguel17}, we can find the degradation coefficient $\frac{1}{\tau}$ as:
 		\begin{equation}
 		60 \% - 6 \% =60 \% e^{\frac{-10}{\tau}} \rightarrow \tau = \frac{-10}{log_e\frac{54}{60}} = 94.91 \quad s^{-1}
 		\end{equation}
@@ -308,7 +320,7 @@ For this block the redundancy is a 8/12 redundancy ring.
 		\end{equation}
 \end{description}
 		\subsubsection{Solar Panels specifications}
-			Once we have found the total power that the satellite needs at the worst case, the estimation of the area for the solar panels is made deploying the following expression:
+			Once we have found the total power that the satellite needs at the worst case, the estimation of the area for the solar panels is made deploying the following expression \cite{Maral17}:
 \begin{equation}
 A_{panel} = \frac{P_{tot} s}{f \Phi \eta_{SP_{EOL}} s (1 - l)}
 \end{equation}
@@ -331,14 +343,8 @@ A = 46.46 \text{ $m^2$}
 \end{equation}
 	\subsection{Weight Estimation}
 		\lipsum[1]
-<<<<<<< HEAD
-
-\section{Ground Segment}\label{sec:ground_segment}
-	\lipsum[1]
-=======
 \section{Ground Segment}
 	The ground segment is composed by a single \gls{gs} and all the mobile users moving around on the northern lands and 		seas of Russia and Europe. The reason for just one \gls{gs} is that, since we do not deploy the multibeam option, there is no 		necessity of having more than one \gls{gs}, because one is enough to correctly collect all the traffic coming from the satellite 		and toward it.
->>>>>>> Cri
 	\subsection{Ground Station coordinates}
 		The coordinates of the \gls{gs} are: \cri{Cambia valore quando Davide ha trovato un buon posto per la GS}
 		\begin{align}
@@ -381,12 +387,35 @@ A = 46.46 \text{ $m^2$}
 The user requirements are substantially the model of the antenna and the dimension of the dish: the model is identical to the ones used for the satellite and the \gls{gs}, so a reflector antenna with a single beam; the dish diameter is smaller in this case, for a matter of space and feasibility, and is of 1 m \cri{verifica valore}. There is no need, in this case, of specifying the position of the users since by definition they are mobile users.
 
 \section{Link Budget}
-	\input{link_budget.tex}
+	\subsection{Parameters setting and estimation}
+		\subsubsection{Antenna Parameters}
+		\subsubsection{Effective Isotropic Radiated Power(EIRP)}
+		\subsubsection{Losses}
+	\subsection{Uplink}
+	\subsection{Downlink}
+The Downlink link budget is calculated as in \autoref{eq:down_link}.
+  \begin{equation}
+	\begin{split}
+      \bigg(\frac{C}{N}\bigg)_U &= EIRP_{down} - OBO - L_D + \bigg(\frac{G}{T}\bigg)_{user} - [k]_{dB} - B_{IF}\\
+	&and\\
+      L_D &= L_{PL} + L_{rain} + L_{pointing} + L_{gas}
+	\end{split}
+	\label{eq:down_link}
+  \end{equation}
+  In that equation $EIRP_{down}$ is the \gls{eirp} trasmitted by the gateway and $(G/T)_{sat}$ is the \textit{Gain-over-Temperature} ratio of the user. $k$ and $B_{IF}$ remain the same values we also used for the Uplink link budget, while $L_D$ now represents the losses in the downlink segment.
+
+  $(G/T)_{user}$ is computed as the difference (in dB) between the gain of the receiving antenna and the ground station system temperature $T_{gs}$, as it was for the Uplink case, but this time the Friis formula involves a different antenna temperature. In fact now we are dealing with the user station antenna and this is the reason of the element $T_A^{USER}$ in \autoref{eq:friis}. The formula brings to a user station temperature value of $T_{gs} = 523.94 K$ and a corresponding value for the user figure of merit of $\bigg(\frac{G}{T}\bigg)_{user} = 11.91$ dB 
+
+  \begin{equation}\label{eq:friis}
+    T_{gs} = T_A^{USER} + t_{LNA} + \frac{T_{CABLE}}{G_{LNA}} + \frac{T_{DC}}{G_{LNA}\cdot G_{CABLE}}
+  \end{equation}
+	\subsection{Overall Link Budget}
+\lipsum[1]
 
 \section{Cost Estimation}
 	\subsection{Spacecraft cost}
 		The spacecraft cost can be estimated depending on several parameters and criteria, such as the type of mission, the 				subsystem considered and the unit over which calculate the cost. In our specific case we concentrated on the cost analysis 		for a communication-type satellite and review it for every subsystem of the spacecraft and its launch procedure.\\
-
+		
 		The subsystems analyzed  are the following:
 		\begin{itemize}
 			\item Attitude determination and Control subsystem (ADCS)
@@ -400,41 +429,41 @@ The user requirements are substantially the model of the antenna and the dimensi
 			\item Thermal control
 			\item Telemetry tracking and command (TT\&C)
 		\end{itemize}
-		In particular, \autoref{fig:torta} shows the cost percentage that each system represents: from it we can see that the 				System engineering is the most important item, followed by the EPS and the IA\&T subsystems. Moreover, 						\autoref{fig:distribution} lists the different sections, depending on the type of mission the satellite is intended to 					accomplish, with their standard deviations; tables \ref{fig:mission} and \ref{fig:mission_pound}, instead, show the total 			cost depending on the mission type and the total cost per pound.
-
+		In particular, \autoref{fig:torta} shows the cost percentage that each system represents: from it we can see that the 				System engineering is the most important item, followed by the EPS and the IA\&T subsystems. Moreover, 						\autoref{fig:distribution} lists the different sections, depending on the type of mission the satellite is intended to 					accomplish, with their standard deviations; tables \ref{fig:mission} and \ref{fig:mission_pound}, instead, show the total 			cost depending on the mission type and the total cost per pound \cite{Fox2008}.
+		
 		\begin{figure}
 			\centering
 			\includegraphics[width = .7\textwidth]{Torta.png}
 			\caption{Communication spacecraft cost composition}
 			\label{fig:torta}
 		\end{figure}
-
+		
 		\begin{figure}
 			\centering
 			\includegraphics[width = 1\textwidth]{Standard_dev.png}
 			\caption{Communication spacecraft cost composition: averages and standard deviations}
 			\label{fig:distribution}
 		\end{figure}
-
+		
 		\begin{figure}
 			\centering
 			\begin{minipage}{1\textwidth}
 			\centering
-			\includegraphics[width = .95\textwidth]{Mission.png}
+			\includegraphics[width = .95\textwidth]{mission.png}
 			\caption{Total spacecraft cost}
 			\label{fig:mission}
 			\end{minipage}
 			\hspace{20mm}
 			\begin{minipage}{.95\textwidth}
 			\centering
-			\includegraphics[width = .95\textwidth]{Mission_pound.png}
+			\includegraphics[width = .95\textwidth]{mission_pound.png}
 			\caption{Total spacecraft cost per pound}
 			\label{fig:mission_pound}
 			\end{minipage}
 		\end{figure}
-
+		
 		Regarding the cost per subsystem, \autoref{tab:systems1} and \autoref{tab:systems2} show the different cost each 				subsystem is intended to have:
-
+		
 		\begin{table}
 			\centering
 			\begin{tabular}{ccc}
@@ -446,13 +475,13 @@ The user requirements are substantially the model of the antenna and the dimensi
 			Structure & 4111,49   & 2955,92\\
 			SEPM      & 12167,05 & 7825,63\\
 			Thermal  & 903,45    & 562,3\\
-			TT\&C    & 4423,24   & 2942,24\\
+			TT\&C    & 4423,24   & 2942,24\\ 
 			\bottomrule
 			\end{tabular}
 			\caption{List of the costs per subsystem}
 			\label{tab:systems1}
 		\end{table}
-
+		
 		\begin{table}
 			\centering
 			\begin{tabular}{ccc}
@@ -471,9 +500,9 @@ The user requirements are substantially the model of the antenna and the dimensi
 			\caption{List of the costs per subsystem per pound/channel}
 			\label{tab:systems2}
 		\end{table}
-
+		
 		Through this data we can make a raw hypothesis on the average total cost of the spacecraft with a summary estimation 			of its mass:
-
+		
 		\begin{table}
 			\centering
 			\begin{tabular}{ccc}
@@ -485,7 +514,7 @@ The user requirements are substantially the model of the antenna and the dimensi
 			Structure   & 15,94  \euro/Kg     & $\times NCHILI +$\\
 			SEPM        & 12167,05 \euro     & $+$\\
 			Thermal    & 903,45 \euro        & $+$\\
-			TT\&C       & 4423,24 \euro      & $+$\\
+			TT\&C       & 4423,24 \euro      & $+$\\ 
 			ADCS        & 94,70 \euro/Kg     & $\times NCHILI +$\\
 			Propulsion & 54,68   \euro/Kg   & $\times NCHILI +$\\
 			Communication ($10 < ch < 25$) & 1534,45 \euro/ch & $\times 12 ch =$\\
@@ -496,7 +525,7 @@ The user requirements are substantially the model of the antenna and the dimensi
 			\label{tab:cost}
 		\end{table}
 	\subsection{Launch cost}
-For the launch cost we based our considerations on the prices listed by the $SpaceX$ company. \autoref{fig:spacex} shows the prices for different types of launches, depending on the mass of the spacecrafts and the orbits they should reach.
+For the launch cost we based our considerations on the prices listed by the $SpaceX$ company. \autoref{fig:spacex} shows the prices for different types of launches, depending on the mass of the spacecrafts and the orbits they should reach \cite{spacex}.
 
 Through the considerations we have made in the previous sections we can state that around $180$ Millions of dollars ($151.793.055$ \euro \cri{verifica il prezzo}) are needed for the launch: in fact each spacecraft has a total mass of about \cri{mettere massa} and the Molniya orbit is a HEO orbit; moreover, since the raans of the two orbital planes are separated of 180 $\deg$ it is necessary to use two separate launchers, one for each spacecraft.\\
 
@@ -513,30 +542,9 @@ Cost_{Total} = Cost_{Launch} + Cost_{Spacecraft} = \cri{Mettere costo finale} \t
 \end{figure}
 
 \section{Final considerations and conclusions}
-	\lipsum[1]
-
-<<<<<<< HEAD
-=======
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	With this work we intended to present a communication system aimed to service the polar regions over Europe and Russia. From the previous sections the values and parameters found permitted us to establish the reliability and the feasibility of our system in terms of cost and weight. From our calculations we obtained a relatively simple system which needs 2 satellites and one ground station to supply our purpose and guarantees continuous coverage of the interested zones, moreover the link budget analysis provides us satisfactory values for the communication link, at the same time requiring a not so power-costly technology (see the modulation choice or the power for the \gls{hpa} based on worst case analysis). Finally, the cost analysis outlines a project which could represent a typical market solution, even though the one presented here is just a first proposal and it could be refined with more time and a comparison to other approaches.
 >>>>>>> Cri
+
 \bibliographystyle{IEEEtran}
 \bibliography{IEEEabrv,bibliography}
 

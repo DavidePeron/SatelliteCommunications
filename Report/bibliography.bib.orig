@@ -1,3 +1,9 @@
+@BOOK{ippolito17,
+  TITLE = {Satellite Communications Systems Engineering Atmospheric Effects, Satellite Link Design and System Performance},
+  AUTHOR = {Ippolito, Louis J.},
+  YEAR = {2017},
+  PUBLISHER = {Wiley},
+}
 @book{Maral2017,
 author = {Maral Gérard, Bosquet Michel},
 title = {{Satellite communications systems. Systems, techniques and technologies}},
@@ -5,6 +11,15 @@ publisher = {Wiley},
 year = {2009},
 }
 
+<<<<<<< HEAD
+@electronic{dvbs2x,
+organization={ETSI EN 302 307-2},
+title={Digital Video Broadcasting (DVB), Second generation
+framing structure, channel coding and modulation systems for
+Broadcasting, Interactive Services, News Gathering and other broadband
+satellite applications, Part II: S2-Extensions (DVB-S2X)},
+url={http://www.etsi.org/deliver/etsi_en/302300_302399/30230702/01.01.01_20/en_30230702v010101a.pdf}
+=======
 @book{Ippolito17,
 author = {Ippolito, L.J.},
 title = {{Satellite communications systems engineering: atmospheric effects, satellite link design and system performance}},
@@ -27,4 +42,5 @@ organization = {SpaceX}
 author = {Fox, Bernard and Brancato, Kevin and Alkire, Brien},
 title = {{Guidelines and Metrics for Assessing Space System Cost Estimates}},
 year = {2008}
+>>>>>>> Cri
 }
