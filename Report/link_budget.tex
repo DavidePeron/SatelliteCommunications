@@ -85,7 +85,7 @@ In the first part, the parameters used in the calculation are presented and disc
 			\includegraphics[width = \textwidth]{up_rain.eps}
 			\caption{Variation of rain losses in Uplink over the time}
 			\label{fig:rain_up}
-			\end{minipage}
+			\end{minipage}\hspace{0.5cm}
 			\begin{minipage}{.5\textwidth}
 			\centering
 			\includegraphics[width = \textwidth]{down_rain.eps}
@@ -119,7 +119,7 @@ In the first part, the parameters used in the calculation are presented and disc
 			\includegraphics[width = \textwidth]{up_pathloss.eps}
 			\caption{Variation of Path Loss in Uplink over the time}
 			\label{fig:up_pathloss}
-			\end{minipage}
+			\end{minipage}\hspace{0.5cm}
 			\begin{minipage}{.5\textwidth}
 			\centering
 			\includegraphics[width = \textwidth]{down_pathloss.eps}
@@ -142,5 +142,66 @@ In the first part, the parameters used in the calculation are presented and disc
 	\end{equation}
 	For the Uplink, using $G_{GS}^{TX}$ as gain, the result is $EIRP_{GS} = 96.79 ~dB$, while for the Downlink, using $G_{SAT}^{TX}$ as gain, the result is $EIRP_{SAT} = 66.58 ~dB$.
 \subsection{Uplink}
+	The Uplink link budget is calculated as in \autoref{eq:up_link}.
+	\begin{equation} \label{eq:up_link}
+		\begin{split}
+			\bigg(\frac{C}{N}\bigg)_U &= EIRP_{gs} - IBO - L_U + \bigg(\frac{G}{T}\bigg)_{sat} - [k]_{dB} - B_{IF}\\
+			L_U &= L_{PL} + L_{rain} + L_{pointing} + L_{gas}
+		\end{split}
+	\end{equation}
+	Where $EIRP_{gs}$ is the \gls{eirp} trasmitted by the \gls{gs}, $(G/T)_{sat}$ is the \textit{Gain-over-Temperature} ratio of the satellite, $k$ is the Boltzmann constant and $B_{IF}$ is the Intermodulation frequency bandwidth, that in our case is simply the Carrier Symbol Rate $R_S$.
+	$R_S$ is calculated as $R_B/4$ since we are using a 16APSK modulation that uses 4 bit per symbol ($bit ~per ~symbol = log_2(16) = 4$).
+
+	$(G/T)_{sat}$ is computed as the difference (in dB) between the gain of the receiving antenna and the system temperature $T_S$.
+
+	This last one is computed with the Friis' formula as in \autoref{eq:t_system}, and it gives a temperature of $T_S = 733.95K$, that corresponds to a $(G/T)_{sat}$ equal to $14.28dB$.
+	\begin{equation}\label{eq:t_system}
+		T_S = T_A^{SAT} + t_{LNA} + \frac{T_{CABLE}}{G_{LNA}} + \frac{T_{DC}}{G_{LNA}\cdot G_{CABLE}}
+	\end{equation}
 \subsection{Downlink}
 \subsection{Overall Link Budget}
+Once we calculate the Uplink link budget and the Downlink one, we have to put them together to find the overall link budget with the formula in \autoref{eq:link_budget_formula}, where $C/IM$ is the \textit{carrier-to-intermodulation} noise and in this project is put to $23dB$.
+
+\begin{equation}\label{eq:link_budget_formula}
+	\bigg(\frac{C}{N}\bigg)_{TOT} = \bigg[\bigg(\frac{C}{N}\bigg)^{-1}_U + \bigg(\frac{C}{N}\bigg)^{-1}_D + \bigg(\frac{C}{IM}\bigg)^{-1}\bigg]^{-1}
+\end{equation}
+
+The plots of the Link Budget in function of the time (in the simulation) are in	\autoref{fig:CN_rain} and \autoref{fig:CN_no_rain}.
+
+To ensure a good communication, the $E_s/N_0$ required by the modulation has to be lower then the actual link budget, so we define a quantity called \textit{Link Margin}, defined as in \autoref{eq:link_margin}, that has to be greater than 0. The $E_s/N_0$ required by a 16APSK 8/15-L is $6.55dB$, as stated in \cite{dvbs2x}.
+
+The plots of the Link Budget in function of the time are in	\autoref{fig:lm_rain} and \autoref{fig:lm_no_rain}.
+
+\begin{equation}\label{eq:link_margin}
+	Link ~Margin = \bigg(\frac{C}{N}\bigg)_{TOT} - \bigg(\frac{E_S}{N_0}\bigg)_{16APSK ~8/15-L}
+\end{equation}
+
+\begin{figure}[ht]
+	\begin{minipage}{.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{CN_rain.eps}
+		\caption{$(C/N)_{TOT}$ taking in account the rain attenuation}
+		\label{fig:CN_rain}
+	\end{minipage}\hspace{0.5cm}
+	\begin{minipage}{.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{CN_no_rain.eps}
+		\caption{$(C/N)_{TOT}$ in clear sky conditions}
+		\label{fig:CN_no_rain}
+	\end{minipage}
+\end{figure}
+
+\begin{figure}[ht]
+	\begin{minipage}{.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{link_margin_rain.eps}
+		\caption{Link Margin taking in account the rain attenuation}
+		\label{fig:lm_rain}
+	\end{minipage}\hspace{0.5cm}
+	\begin{minipage}{.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{link_margin_no_rain.eps}
+		\caption{Link Margin in clear sky conditions}
+		\label{fig:lm_no_rain}
+	\end{minipage}
+\end{figure}

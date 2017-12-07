@@ -83,7 +83,7 @@ function [CNtot, link_margin, CNtot_rain, link_margin_rain]= link_budget(r,t,lam
         L_s = 2/sind(best_elevation(i)); %I assume that the clouds are 2km high
         r_p = 90/(90+4*L_s*cosd(best_elevation(i))); % Non homogeneity of the rain
         Lu_rain(i) = (4.21e-5*(frequency_uplink/10^9)^2.42)*R^(1.41*(frequency_uplink/10^9)^(-0.0779))*L_s*r_p; %I assume that the clouds are 2km high
-        CN_uplink(i) = EIRPgw - Lu_pathloss(i) - k - 10*log10(carrier_s_r) + satellite_G_T;
+        CN_uplink(i) = EIRPgw - Lu_pathloss(i) - k - 10*log10(carrier_s_r) - pointing_loss - gases_absortion + satellite_G_T - abs(IBO);
         CN_uplink_rain(i) = CN_uplink(i) - Lu_rain(i);
     end
 
@@ -105,7 +105,7 @@ function [CNtot, link_margin, CNtot_rain, link_margin_rain]= link_budget(r,t,lam
         L_s = 2/sind(best_elevation(n)); %I assume that the clouds are 2km high
         r_p = 90/(90+4*L_s*cosd(best_elevation(n))); % Non homogeneity of the rain
         Ld_rain(n) = (4.21e-5*(frequency_downlink/10^9)^2.42)*R^(1.41*(frequency_downlink/10^9)^(-0.0779))*L_s*r_p; %I assume that the clouds are 2km high
-        CN_downlink(n) = EIRP_down + GT_user - Ld_pathloss(n) - k - 10*log10(carrier_s_r) - pointing_loss - gases_absortion;
+        CN_downlink(n) = EIRP_down + GT_user - Ld_pathloss(n) - k - 10*log10(carrier_s_r) - pointing_loss - gases_absortion - abs(OBO);
         CN_downlink_rain(n) = CN_downlink(n) - Ld_rain(n);
     end
 

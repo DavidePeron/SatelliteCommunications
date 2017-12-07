@@ -211,7 +211,7 @@ for k = 1:length(lat_gs)
     
     subplot(2,2,4);
     plot(t,link_margin(k,:))
-    title('Time VS Link margin')
+    title('Time VS Link margin without rain')
     xlabel('Time (s)')
     ylabel('Link margin')
     grid on;
@@ -234,14 +234,14 @@ for k = 1:length(lat_gs)
     
     subplot(2,2,3);
     plot(t,CNtot_rain(k,:))
-    title('Distance Time VS Total SNR')
+    title('Time VS Total SNR')
     xlabel('Time (s)')
     ylabel('Total SNR (dB)')
     grid on;
     
     subplot(2,2,4);
     plot(t,link_margin_rain(k,:))
-    title('Distance Time VS Link margin')
+    title('Time VS Link margin')
     xlabel('Time (s)')
     ylabel('Link margin')
     grid on;
