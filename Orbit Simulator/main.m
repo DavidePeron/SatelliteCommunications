@@ -63,13 +63,14 @@ raan = deg2rad(25);
 % end
 % 
 % mean_el = zeros(1,length(lat_gs));
-lat_gs = [65]; %Ground station position
-long_gs = [-90];
+lat_gs = 65; %Ground station position
+long_gs = -90;
 
-R = [11.4919]; %Rain attenuation coefficient [mm/h]
+R = 11.4919; %Rain attenuation coefficient [mm/h] in uplink
+R_down = 4.5554; %Rain attenuation coefficient in downlink
 R = repelem(R,length(lat_gs));
-lat_us = lat_gs; %user random positioned
-long_us = long_gs;
+lat_us = 71; %user random positioned
+long_us = -45;
 % raan_sat = [raan, raan + deg2rad(-242.4783429000001), raan + deg2rad(-122.1497972999974)];
 raan_sat = zeros(1,n_sat)+raan; % Initial raan vector
 t = 0:runspeed:T*n_rev; % time [s]
@@ -112,11 +113,11 @@ end
 % % %Initializing the Drawing Space and static components
 earthmap = imread('planisphere2.jpg');
 % 
-% earthplot3D(earthmap, t, r, re, El, e, a, ECI, color);
+%earthplot3D(earthmap, t, r, re, El, e, a, ECI, color);
 % 
 % %% Ground Track
 % 
-% groundtrack_plot(earthmap, t, r, re, El, long, lat, color, lat_gs, long_gs);
+%groundtrack_plot(earthmap, t, r, re, El, long, lat, color, lat_gs, long_gs, lat_us, long_us);
 
 %% 
 % %Plot of r(phi)
@@ -155,7 +156,7 @@ for k = 1:length(lat_gs)
     
 %     mean_el(k) = mean(best_elevation);
     
-    [CNtot(k,:),link_margin(k,:), CNtot_rain(k,:),link_margin_rain(k,:)]=link_budget(r,t,lambda_matrix(k,:),lambda_us_matrix(k,:), best_sat_matrix(k,:), R(k), best_elevation);
+    [CNtot(k,:),link_margin(k,:), CNtot_rain(k,:),link_margin_rain(k,:)]=link_budget(r,t,lambda_matrix(k,:),lambda_us_matrix(k,:), best_sat_matrix(k,:), R, R_down, best_elevation);
     %Plot of Azimuth 
     figure(5+k);
     set(gcf,'Menubar','default','Name','Azimuth and Elevation ');

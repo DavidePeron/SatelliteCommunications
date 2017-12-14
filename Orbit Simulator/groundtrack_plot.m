@@ -1,4 +1,4 @@
-function groundtrack_plot(earthmap, t, r, re, El, long, lat, color, lat_gs, long_gs)
+function groundtrack_plot(earthmap, t, r, re, El, long, lat, color, lat_gs, long_gs,lat_us, long_us)
 
     n_sat = length(long);
     h1 = cell(n_sat);
@@ -20,6 +20,8 @@ function groundtrack_plot(earthmap, t, r, re, El, long, lat, color, lat_gs, long
         plot (long_gs(i),lat_gs(i),'o', 'MarkerEdgeColor', 'k','MarkerFaceColor','y','MarkerSize', 5);
 %         set (gs(i), 'Visible', 'on');
     end
+    
+    plot (long_us(i),lat_us(i),'o', 'MarkerEdgeColor', 'k','MarkerFaceColor','c','MarkerSize', 5);
     
     for i=1:length(t)
         for j = 1:n_sat
