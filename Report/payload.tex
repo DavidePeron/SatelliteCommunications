@@ -168,5 +168,76 @@ And from it the final value for the solar panel area of our satellite is:
 \begin{equation}
 A = 46.46 \text{ $m^2$}
 \end{equation}
-\subsection{Weight Estimation}
-\lipsum[1]
+\subsection{Mass Estimation}
+	The total mass of a communication-type satellite can be estimated through a mean of the major communication satellites orbiting around the Earth in this moment. \autoref{tab:totmass} shows a list of some satellites and their total masses, it can be seen that there are continuous variations but generally the mass is always around 3000 kilos.
+
+	\begin{table}
+		\centering
+		\begin{tabular}{llr}
+			\toprule
+			Country & Satellite & Mass (kg)\\
+			\midrule
+				USA & & \\
+				& AirTV 1, 2, 3, 4 & 3800\\
+				& Ge 8 & 2015\\
+				& AMC 10, 11 & 2315\\
+				& AssureSat 1, 2 & 4500\\
+				& Rainbow 1 & 4328\\
+				& Ge 4 & 3895\\
+				& EchoStar 3 & 3674\\
+				& DirecTV 1 & 2870\\
+				& EchoStar 1 & 3287\\
+				India & & \\
+				& GSAT-6 & 2117\\
+				& GSAT-15 & 3164\\
+				& GSAT-17 & 3477\\
+				& GSAT-19 & 3136\\
+				& GSAT-5P & 2310\\
+				& INSAT-4CR & 2130\\
+				& INSAT-4A & 3081\\
+				& INSAT-4B & 3925\\
+				& EDUSAT & 1950\\
+				Europe (ESA) & & \\
+				& Inmarsat-4A & 6649\\
+				& Artemis & 3105\\
+				& Eutelsat 9B & 5175\\
+				& Olympus F1 & 2595\\
+				& OTS 1 & 865\\
+				& Uragan-K1 & 962\\
+			\midrule
+			Average Mass & & 3138.54\\
+			\bottomrule
+		\end{tabular}
+		\caption{Masses of some of the most recent communication-type satellites}
+		\label{tab:totmass}
+	\end{table}
+An estimation can be made also about some single satellite subsystems, for example the mass of the EPS, the ADCS or the propulsion system.
+
+For the Electrical Power System, an example from \cite{Fox2008} shows a total mass of $362,874$ kg for a $27,87$ $m^2$ solar panel, so using a proportion we can estimate a mass for our solar panel equal to:
+\begin{equation}
+	Mass_{SP} = \frac{362,874}{27,87}\times 46,46 = 604,92 \text{ kg}
+\end{equation}
+
+For the Propulsion System, a document from \cite{intelsat29e} talks about an approximate mass of $3550$ for the propellant loaded in the "Intelsat29e" satellite (1550 kg of oxidizer and 2000 kg of fuel). We chose this value as a reference.
+
+Finally, Table 2.3 from \cite{Abdelal2013} provides very useful guides to estimate the cost of an initial equipment list. In particular we considered the ADCS system, whose mass is estimated in \autoref{tab:ADCS}.
+
+\begin{table}[ht]
+	\centering
+	\begin{tabular}{lcr}
+		\toprule
+		Component & Quantity & Mass/Component (kg)\\
+		\midrule
+		Star sensor & 1 & 4\\
+		Angular velocity meter "Gyro" & 4 & 1\\
+		Interface unit for each gyro & 4 & 0.92\\
+		Magnetometer & 1 & 1.5\\
+		Magnetorquer & 3 & 0.38\\
+		Reaction wheel & 4 & 3.3\\
+		\midrule
+		Total mass = & & 27.52\\
+		\bottomrule
+	\end{tabular}
+	\caption{Mass calculation for ADCS subsystem}
+	\label{tab:ADCS}
+\end{table}
