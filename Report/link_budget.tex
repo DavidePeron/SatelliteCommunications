@@ -11,8 +11,8 @@ In the first part, the parameters used in the calculation are presented and disc
 			\toprule
 			& Symbol & Value\\
 			\midrule
-			\gls{gs} antenna diameter (m) & $d_{GS}$ & 6\\
-			Sat antenna diameter (m) & $d_{SAT}$  & 1.2\\
+			\gls{gs} antenna diameter (m) & $d_{GS}$ & 3\\
+			Sat antenna diameter (m) & $d_{SAT}$  & 1\\
 			Sat antenna noise temperature (K)& $t_A^{SAT}$ & 290\\
 			User antenna diameter (m)& $d_{US}$ & 1\\
 			User antenna noise temperature (K)& $t_A^{US}$ & 80\\
@@ -38,12 +38,12 @@ In the first part, the parameters used in the calculation are presented and disc
 			\centering
 			\begin{tabular}{ccc}
 			\toprule
-			& Symbol & Value\\
+			& Symbol & Value (dB)\\
 			\midrule
-			\gls{gs} antenna gain (dB) & $G_{GS}^{TX}$ & 56.92\\
-			Sat antenna gain while receiving (dB) & $G_{SAT}^{RX}$  & 42.94\\
-			Sat antenna gain while transmitting (dB) & $G_{SAT}^{TX}$ & 40.68\\
-			User antenna gain (dB) & $G_{US}^{RX}$ & 39.1\\
+			\gls{gs} antenna gain & $G_{GS}^{TX}$ & 50.9\\
+			Sat antenna gain while receiving & $G_{SAT}^{RX}$  & 41.36\\
+			Sat antenna gain while transmitting & $G_{SAT}^{TX}$ & 39.1\\
+			User antenna gain & $G_{US}^{RX}$ & 39.1\\
 			\bottomrule
 			\end{tabular}
 			\caption{Gain of each antenna in transmission and reception}
@@ -57,11 +57,11 @@ In the first part, the parameters used in the calculation are presented and disc
 			\centering
 			\begin{tabular}{ccc}
 			\toprule
-			& Symbol & Value\\
+			& Symbol & Value (dB)\\
 			\midrule
-			Input Backoff & $IBO$ & -16\\
-			Output Backoff & $OBO$ & -10.47\\
-			Losses due to multicarrier operation & $l_{mc}$ & 10.47\\
+			Input Backoff & $IBO$ & -0.5\\
+			Output Backoff & $OBO$ & -0.0203\\
+			Losses due to multicarrier operation & $l_{mc}$ & 0.0203\\
 			Losses due to feeder & $l_{ftx}$  & 0.5\\
 			Carrier to interference noise & $C/I$  & 23\\
 			Pointing Loss & $l_p$ & 0.3\\
@@ -129,18 +129,15 @@ In the first part, the parameters used in the calculation are presented and disc
 		\end{figure}
 	\subsubsection{Effective Isotropic Radiated Power(EIRP)}
 	To calculate \gls{eirp} we have to compute firstly the power that each antenna has to transmit $p_{tx}$.
-	The power that each transponder has to transmit is calculated as in \autoref{eq:power_1T}, using the parameters yet defined, than this power has to be multiplied for the number of transponder in the system, that in our case is 12, the final formula is in
-	\begin{equation}\label{eq:power_1T}
-		p_{tx}^{1T} = [p_{HPA}]_{dB} - l_{mc} - l_{ftx}
-	\end{equation}
-	\begin{equation}\label{eq:power_tot}
-		p_{tx} = p_{tx}^{1T} + 10log(12)
+	The power that the antenna has to transmit is calculated as in \autoref{eq:power_tx}, using the parameters yet defined.
+	\begin{equation}\label{eq:power_tx}
+		p_{tx} = [p_{HPA}]_{dB} - l_{mc} - l_{ftx}
 	\end{equation}
 	Then the \gls{eirp} is calculated for Uplink and Downlink with the formula in \autoref{eq:eirp}.
 	\begin{equation}\label{eq:eirp}
 		EIRP = G_{tx} + p_{tx}
 	\end{equation}
-	For the Uplink, using $G_{GS}^{TX}$ as gain, the result is $EIRP_{GS} = 96.79 ~dB$, while for the Downlink, using $G_{SAT}^{TX}$ as gain, the result is $EIRP_{SAT} = 66.58 ~dB$.
+	For the Uplink, using $G_{GS}^{TX}$ as gain, the result is $EIRP_{GS} = 70.37 ~dB$, while for the Downlink, using $G_{SAT}^{TX}$ as gain, the result is $EIRP_{SAT} = 62.38 ~dB$.
 \subsection{Uplink}
 	The Uplink link budget is calculated as in \autoref{eq:up_link}.
 	\begin{equation} \label{eq:up_link}
@@ -155,9 +152,9 @@ In the first part, the parameters used in the calculation are presented and disc
 
 	$(G/T)_{sat}$ is computed as the difference (in dB) between the gain of the receiving antenna and the system temperature $T_S$.
 
-	This last one is computed with the Friis' formula as in \autoref{eq:t_system}, and it gives a temperature of $T_S = 733.95K$, that corresponds to a $(G/T)_{sat}$ equal to $14.28dB$.
+	This last one is computed with the Friis' formula as in \autoref{eq:t_system}, and it gives a temperature of $T_S = 733.95K$, that corresponds to a $(G/T)_{sat}$ equal to $12.71dB/K$.
 	\begin{equation}\label{eq:t_system}
-		T_S = T_A^{SAT} + t_{LNA} + \frac{T_{CABLE}}{G_{LNA}} + \frac{T_{DC}}{G_{LNA}\cdot G_{CABLE}}
+		T_S = T_A^{SAT} + t_{LNA} + \frac{T_{DC}}{G_{LNA}}
 	\end{equation}
 \subsection{Downlink}
 	The Downlink link budget is calculated as in \autoref{eq:down_link}.
@@ -171,10 +168,10 @@ In the first part, the parameters used in the calculation are presented and disc
 	\end{equation}
 	In that equation $EIRP_{down}$ is the \gls{eirp} trasmitted by the gateway and $(G/T)_{sat}$ is the \textit{Gain-over-Temperature} ratio of the user. $k$ and $B_{IF}$ remain the same values we also used for the Uplink link budget, while $L_D$ now represents the losses in the downlink segment.
 
-	$(G/T)_{user}$ is computed as the difference (in dB) between the gain of the receiving antenna and the ground station system temperature $T_{gs}$, as it was for the Uplink case, but this time the Friis formula involves a different antenna temperature. In fact now we are dealing with the user station antenna and this is the reason of the element $T_A^{USER}$ in \autoref{eq:friis}. The formula brings to a user station temperature value of $T_{gs} = 523.94 K$ and a corresponding value for the user figure of merit of $\bigg(\frac{G}{T}\bigg)_{user} = 11.91$ dB
+	$(G/T)_{user}$ is computed as the difference (in dB) between the gain of the receiving antenna and the ground station system temperature $T_{gs}$, as it was for the Uplink case, but this time the Friis formula involves a different antenna temperature. In fact now we are dealing with the user station antenna and this is the reason of the element $T_A^{USER}$ in \autoref{eq:friis}. The formula brings to a user station temperature value of $T_{gs} = 523.94 K$ and a corresponding value for the user figure of merit of $(G/T)_{user} = 11.93 dB/K$.
 
 	\begin{equation}\label{eq:friis}
-		T_{gs} = T_A^{USER} + t_{LNA} + \frac{T_{CABLE}}{G_{LNA}} + \frac{T_{DC}}{G_{LNA}\cdot G_{CABLE}}
+		T_{gs} = T_A^{USER} + t_{LNA} + \frac{T_{DC}}{G_{LNA}}
 	\end{equation}
 \subsection{Overall Link Budget}
 Once we calculate the Uplink link budget and the Downlink one, we have to put them together to find the overall link budget with the formula in \autoref{eq:link_budget_formula}, where $C/IM$ is the \textit{carrier-to-intermodulation} noise and in this project is put to $23dB$.

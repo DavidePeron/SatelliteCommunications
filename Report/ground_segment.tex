@@ -2,13 +2,19 @@ The ground segment is composed by a single \gls{gs} and all the mobile users mov
 \subsection{Ground Station coordinates}
 	The coordinates of the \gls{gs} are:
 	\begin{align}
-	lat &= 65\\
-	long &= -90\\
+	lat &= 65N\\
+	long &= 90E\\
 	\end{align}
-	These coordinates have been chosen based on the elevation values: the coordinates listed above represent a point in 				Russia in the surrounding area of the subsatellite point of the apogee. In this way, the values of elevation are always 				substantially high, guaranteeing always a good visibility. Moreover, another factor is the rain attenuation, which is not 			much high in this region, as we can conclude from the respective value of $R$:
+	These coordinates have been chosen based on the elevation values visible in \autoref{fig:elevation_final}: the coordinates listed above represent a point in Russia in the surrounding area of the subsatellite point of the apogee. In this way, the values of elevation are always substantially high, guaranteeing always a good visibility. Moreover, another factor is the rain attenuation, which is not much high in this region, as we can conclude from the respective value of $R$:
 	\begin{equation}
 	R = 11.4919 \quad mm/h
 	\end{equation}
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=.5\textwidth]{EL_AZ_GS.eps}
+		\caption{Elevation and Azimuth in the Ground Station Position}
+		\label{fig:elevation_final}
+	\end{figure}
 \subsection{Ground Station requirements}
 	The requirements for the \gls{gs} are substantially the following:
 	\begin{itemize}
@@ -37,4 +43,4 @@ The ground segment is composed by a single \gls{gs} and all the mobile users mov
 	Another aspect to consider is the fact that the variations in the azimuth values are very steep in a specific moment of the satellite revolution, and this brings as side effect the temporary suspension of the service for the time needed by the \gls{gs} to point properly the correct satellite in orbit (about 2 minutes).
 	To avoid this problem, two antennas in the \gls{gs} can be used.
 \subsection{User requirements}
-The user requirements are substantially the model of the antenna and the dimension of the dish: the model is identical to the ones used for the satellite and the \gls{gs}, so a reflector antenna with a single beam; the dish diameter is smaller in this case, for a matter of space and feasibility, and is of 1 m. There is no need, in this case, of specifying the position of the users since by definition they are mobile users.
+The user requirements are substantially the model of the antenna and the dimension of the dish: the model is identical to the ones used for the satellite and the \gls{gs}, so a reflector antenna with a single beam; the dish diameter is smaller in this case, for a matter of space and feasibility, and is of 1 m. There is no need, in this case, of specifying the position of the users since by definition they are mobile users. As example we put the user in 71N,45E, that corresponds to a rain rate $R = 4.5554 mm/h$.

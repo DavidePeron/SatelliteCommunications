@@ -51,9 +51,6 @@ function [CNtot, link_margin, CNtot_rain, link_margin_rain]= link_budget(r,t,lam
     g_lna = 10^(G_lna/10); %LNA gain
     f_lna = 4; %LNA noise figure [dB]
     t_lna = 290*((10^(f_lna/10))-1); %LNA noise temperature
-    f_cable = 3; %cable noise figure [dB]
-    g_cable = 1/10^(f_cable/10); %cable attenuation
-    t_cable = 290*((10^(f_cable/10))-1); %cable temperature
     f_dc = 10; %[dB] Noise Figure of the down converter
     t_dc = 290*((10^(f_dc/10))-1);%down converter temperature
     
@@ -80,10 +77,9 @@ function [CNtot, link_margin, CNtot_rain, link_margin_rain]= link_budget(r,t,lam
     carrier_s_r = carrier_b_r/4; %Carrier symbol rate: with 16APSK we have 4 bits/symbol 
     lambda_link_up = c/(frequency_uplink); %Uplink wavelength 
     Ggw = 10*log10(efficiency*(pi*diameter_gs/lambda_link_up)^2); %Gain of the Ground station antenna [dBi]
-    p_t = 20*log10(p_HPA)-l_mc-l_ftx; %Total power for a transponder
-    p_tx = p_t; %Total power tx by the antenna (p_t x the n of transponders)
+    p_tx = 10*log10(p_HPA)-l_mc-l_ftx; %Total power tx by antenna
     G_rx_sat = 10*log10(efficiency*(pi*diameter_sat/lambda_link_up)^2); %Gain of the Satellite antenna in reception [dBi]
-    T_system_sat = T_antenna_sat + t_lna + t_cable/g_lna + t_dc/(g_cable*g_lna);
+    T_system_sat = T_antenna_sat + t_lna + t_dc/g_lna;
     satellite_G_T = G_rx_sat - 10*log10(T_system_sat); %G/T satellite
     EIRPgw = Ggw + p_tx; %Gateway EIRP
     
@@ -92,6 +88,7 @@ function [CNtot, link_margin, CNtot_rain, link_margin_rain]= link_budget(r,t,lam
         L_s = 2/sind(best_elevation(i)); %I assume that the clouds are 2km high
         r_p = 90/(90+4*L_s*cosd(best_elevation(i))); % Non homogeneity of the rain
         Lu_rain(i) = (4.21e-5*(frequency_uplink/10^9)^2.42)*R_up^(1.41*(frequency_uplink/10^9)^(-0.0779))*L_s*r_p; %I assume that the clouds are 2km high
+%         Lu_rain(i) = Lu_rain(i)*(1/0.01)^(-0.5);
         CN_uplink(i) = EIRPgw - Lu_pathloss(i) - k - 10*log10(carrier_s_r) - pointing_loss - gases_absortion + satellite_G_T - abs(IBO);
         CN_uplink_rain(i) = CN_uplink(i) - Lu_rain(i);
     end
@@ -102,11 +99,11 @@ function [CNtot, link_margin, CNtot_rain, link_margin_rain]= link_budget(r,t,lam
     
     lambda_link_dw = c/frequency_downlink; %Downlink wavelength
     G__tx_sat = 10*log10(efficiency*(pi*diameter_sat/lambda_link_dw)^2); %Gain of the Satellite antenna in tx [dBi]
-    p_t_down = 20*log10(p_HPA_down) - l_mc - l_ftx; %Total power for a transponder
+    p_t_down = 10*log10(p_HPA_down) - l_mc - l_ftx; %Total power for a transponder
     p_tx_down = p_t_down + 10*log10(12); %Total power tx by the antenna (p_t x the n of transponders)
     EIRP_down = G__tx_sat + p_tx_down; %Gateway EIRP 
     G_user = 10*log10(efficiency*((pi*Diameter_user*frequency_downlink)/c)^2);
-    T_system_gs = T_user_antenna + t_lna + t_cable/g_lna + t_dc/(g_cable*g_lna);
+    T_system_gs = T_user_antenna + t_lna + t_dc/g_lna;
     GT_user = G_user - 10*log10(T_system_gs); %G/T user station
 
     for n = 1:length(t)   
