@@ -131,18 +131,16 @@
 	\input{problem_description.tex}
 
 \section{Simulator and Orbits} \label{sec:orbit}
-	To guarantee the service required in \autoref{sec:problem_description}, different orbits have been taken in account.
-	The most used orbit to ensure a stable and reliable satellite communication is Geostationary.
-	\autoref{fig:GEOCoverage} has been taken from the Inmarsat's Website, and it shows as a \gls{geo} satellite can not reach the latitudes over $75^\circ$. For this reason a \gls{geo} does not fit our purpose.
+	To guarantee the service required in \autoref{sec:problem_description}, different orbits were taken into account, including the Geostationary orbit, since it is the most used one to ensure a stable and reliable satellite communication.
+	Anyway, \autoref{fig:GEOCoverage} was taken from the Inmarsat's Website and shows that a \gls{geo} satellite can not reach the latitudes over $75^\circ$. For this reason we can conclude that \gls{geo} does not fit our purpose.
 
-	\glspl{leo} has been discarded since the time of visibility for a single satellite is very low, so an high number of satellites and an accurate tracking system are required to ensure a continuous service.
+	Another orbit to discard is \glspl{leo}, since the time of visibility for a single satellite is very low and so an high number of satellites and an accurate tracking system are required to ensure a continuous service.
 
-	\glspl{meo} suffer the same problems of \glspl{leo} ones, with the addition of the proximity to the Van Allen Belt where signal degradation increases significantly.
+	Also \glspl{meo} suffers the same problems of \glspl{leo} ones and furthermore is in the proximity of the Van Allen Belt, where signal degradation increases significantly.
 
-	The most suitable solution for our problem is an \gls{heo}, in particular we chose to analyse \textit{Tundra} and \textit{Molniya} orbits.
+	From this analysis we concluded that the most suitable solution for our problem is an \gls{heo} orbit, in particular we focused on \textit{Tundra} and \textit{Molniya} orbits.
 
-	To analyse the behavior of these orbits, an orbital simulator has been implemented using \textsc{Matlab}.
-	The simulator architecture and its results are reported in \autoref{sec:simulator}.
+	To analyse the behavior of these orbits, an orbital simulator has been implemented using \textsc{Matlab} and the simulator architecture and its results are reported in \autoref{sec:simulator}.
 
 	\begin{figure}
 		\centering
