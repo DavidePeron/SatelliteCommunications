@@ -4,7 +4,6 @@ Database file #1: IEEEabrv.bib
 Database file #2: bibliography.bib
 Warning--entry type for "Miguel17" isn't style-file defined
 --line 15 of file bibliography.bib
-Warning--I didn't find a database entry for "dvbs2x"
 -- IEEEtran.bst version 1.14 (2015/08/26) by Michael Shell.
 -- http://www.michaelshell.org/tex/ieeetran/bibtex/
 -- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
@@ -12,4 +11,4 @@ Warning--missing publisher in Fox2008
 Warning--missing publisher in Abdelal2013
 
 Done.
-(There were 4 warnings)
+(There were 3 warnings)

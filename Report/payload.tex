@@ -1,6 +1,6 @@
-For the space segment a payload a considerations on the transponders have been made based on the requirements that the mission has to satisfy: to be precise, the problem description requires a broadcast communication that guarantees a capacity of 5 Mbit in uplink and of 50 Mbit in downlink; moreover the communication has to allow the internet connection and video and voice call service.
+For the space segment payload, considerations on the transponders were made based on the requirements that the mission has to satisfy: to be precise, the problem description requires a broadcast communication that guarantees a capacity of 5 Mbit in uplink and of 50 Mbit in downlink; moreover the communication has to allow the internet connection and video and voice call service.
 \subsection{Communication Module}
-The first thing to do was to select the transponder size, which we fixed at 72 MHz. After that we decided the number of carriers in for the forward and the return link and the amplitude of the guard-band between the carriers. The resulting values are listed in \autoref{tab:commModule} and \autoref{fig:transp} shows a schematic representation of a transponder.
+The first thing to do is to select the transponder size, which we fixed at 72 MHz. After that we decide the number of carriers in the forward and the return link and the amplitude of the guard-band between the carriers. The resulting values are listed in \autoref{tab:commModule} and \autoref{fig:transp} shows a schematic representation of a transponder.
 
 \begin{table}
 \centering
@@ -13,7 +13,7 @@ N carriers in forward link & 2\\
 N carriers in return link & 6\\
 Amplitude carriers in fw & 27.805 MHz\\
 Amplitude carriers in rt & 2,732 MHz\\
-Tot. fw link bandiwdth & 55.61 MHz\\
+Tot. fw link bandwidth & 55.61 MHz\\
 Tot. rt link bandwidth & 16.39 MHz\\
 Guard-band & 3.6 MHz\\
 Tot. bandwidth used & 450 MHz\\
@@ -59,8 +59,7 @@ The main actions in which this block is involved are the \textbf{polarization se
 \label{fig:payload}
 \end{sidewaysfigure}
 \item (3) is the frequency oscillator: its values change with respect to the frequency we need to convert, as shown in \autoref{tab:oscillator}. For the oscillator we have to monitor also other parameters like the conversion losses (normally in the order of 5 - 10 dB, we supposed the worst case of 10 dB and so a noise temperature of 2610 K) and the stability of the frequency \cite{Maral2017};
-\item (4) is the \gls{hpa} necessary to amplify the converted signal before being channelized in the repeater section;
-\item we also have to consider the role of the cables and the losses they bring inside the estimations; in our case we supposed a loss due to the cables of about 3 dB \cite{Ippolito17} and an associate noise temperature of 288.63 K.
+\item (4) is the \gls{hpa} necessary to amplify the converted signal before being channelized in the repeater section.
 \end{itemize}
 	\begin{table}
 	\centering
@@ -90,8 +89,8 @@ For this block the redundancy is of 1/2.
 In addition to this, for each channel of the multiplexers we then have:
 	\begin{itemize}
 	\item (5), a channel amplifier;
-	\item (6), an Automatic Level Control module: a device needed to guarantee a constant power value as input of (7);
-	\item (7), the amplifier module, composed by the EPS and the TWT sections which together form the Travelling Wave Tube Amplifier (TWTA). The output power value that we supposed for the TWTA section is 20W \cite{Maral2017}.
+	\item (6), an \gls{alc} module: a device needed to guarantee a constant power value as input of (7);
+	\item (7), the amplifier module, composed by the \gls{eps} and the TWT sections which together form the \gls{twta}. The output power value that we supposed for the \gls{twta} section is 20W \cite{Maral2017}.
 	\end{itemize}
 	\begin{figure}[h]
 		\centering
@@ -102,7 +101,7 @@ In addition to this, for each channel of the multiplexers we then have:
 For this block the redundancy is a 8/12 redundancy ring.
 
 \subsection{Power Budget}
-The power budget mainly depends on the power required by the TWTA amplifiers in order to transmit the signal to the Earth. As can be seen from the chart in \autoref{fig:powerDistr}, the fraction of power that the communication subsystem requires is about 75 \%, all the other utilities uniformly share the remaining power needed \cite{Miguel17}.
+The power budget mainly depends on the power required by the \gls{twta} amplifiers in order to transmit the signal to the Earth. As can be seen from the chart in \autoref{fig:powerDistr}, the fraction of power that the communication subsystem requires is about 75 \%, all the other utilities uniformly share the remaining power needed \cite{Miguel17}.
 \begin{figure}[h]
 \centering
 \includegraphics[width = .7\textwidth]{powerDistr.png}
@@ -113,7 +112,7 @@ The power budget mainly depends on the power required by the TWTA amplifiers in 
 	To estimate the required power we supposed to be in the worst case (end of life of the satellite) and followed the steps below:
 \begin{itemize}
 \item Estimate the \gls{eol} efficiency for the solar panel;
-\item Estimate the \gls{eol} efficiency for the TWTA module;
+\item Estimate the \gls{eol} efficiency for the \gls{twta} module;
 \item Estimate the \gls{eol} efficiency for the EPC module;
 \item Estimate the total power required for the transponders;
 \item Estimate the total power required for the system;
@@ -123,7 +122,7 @@ The power budget mainly depends on the power required by the TWTA amplifiers in 
 \begin{equation}
 	\eta_{SP_{EOL}} = \eta_{BOL}e^{-0.043T} \rightarrow \eta_{SP_{EOL}} = \frac{17}{100}e^{-0.043\times 15} = 8.9 \%
 \end{equation}
-\item[TWT efficiency] The same expression can be used to estimate the \gls{eol} efficiency for the TWTA, supposing a $\eta_{TW_{BOL}} = 60\%$: in particular, if we suppose that the efficiency value will be reduced of 10\% after 10 years (6\% of decrement)\cite{Miguel17}, we can find the degradation coefficient $\frac{1}{\tau}$ as:
+\item[TWT efficiency] The same expression can be used to estimate the \gls{eol} efficiency for the \gls{twta}, supposing a $\eta_{TW_{BOL}} = 60\%$: in particular, if we suppose that the efficiency value will be reduced of 10\% after 10 years (6\% of decrement)\cite{Miguel17}, we can find the degradation coefficient $\frac{1}{\tau}$ as:
 \begin{equation}
 60 \% - 6 \% =60 \% e^{\frac{-10}{\tau}} \rightarrow \tau = \frac{-10}{log_e\frac{54}{60}} = 94.91 \quad s^{-1}
 \end{equation}
@@ -141,7 +140,7 @@ P_{in_{TW}} &= \frac{P_{out_{TW}}}{\eta_{TW_{EOL}}} = 195.198 \text{ W}\\
 P_{in_{EPC}} &= \frac{P_{in_{TW}}}{\eta_{EPC_{EOL}}} = 240.39 \text{ W}\\
 P_{transp} &= P_{in_{EPC}} \times N_{transp} = 240.39 \times 12 = 2.885 \text{ kW}\\
 \end{align}
-Moreover, since this power consists in the 75\% of the total power necessary for the satellite, the total power for the satellite is:
+Moreover, since this power represents the 75\% of the total power necessary for the satellite, the total power for the satellite is:
 \begin{equation}
 P_{tot} = \frac{P_{transp}}{75\%} = 3.846 \text{ kW}
 \end{equation}
@@ -154,7 +153,7 @@ A_{panel} = \frac{P_{tot} s}{f \Phi \eta_{SP_{EOL}} s (1 - l)}
 Where:
 \begin{itemize}
 \item $s$ is the area of a single cell;
-\item $\Phi$ is the solar flux, supposed to be of 1215,74 $W/m^2$ in the farthest point of the satellite orbit (based on the observation of \autoref{fig:flux});
+\item $\Phi$ is the solar flux, supposed to be of 1215.74 $W/m^2$ in the farthest point of the satellite orbit (based on the observation of \autoref{fig:flux});
 \item $f$ is the filling efficiency, here of the order of 90 \%;
 \item $l$ are general losses due to cabling and cover and typical values are 10 to 15 \% (here we selected 15 \% for a worst-case analysis);
 \end{itemize}
@@ -211,7 +210,7 @@ A = 46.46 \text{ $m^2$}
 		\caption{Masses of some of the most recent communication-type satellites}
 		\label{tab:totmass}
 	\end{table}
-An estimation can be made also about some single satellite subsystems, for example the mass of the EPS, the ADCS or the propulsion system.
+An estimation can be made also about some single satellite subsystems, for example the mass of the \gls{eps}, the \gls{adcs} or the propulsion system.
 
 For the Electrical Power System, an example from \cite{Fox2008} shows a total mass of $362,874$ kg for a $27,87$ $m^2$ solar panel, so using a proportion we can estimate a mass for our solar panel equal to:
 \begin{equation}
@@ -220,7 +219,7 @@ For the Electrical Power System, an example from \cite{Fox2008} shows a total ma
 
 For the Propulsion System, a document from \cite{intelsat29e} talks about an approximate mass of $3550$ for the propellant loaded in the "Intelsat29e" satellite (1550 kg of oxidizer and 2000 kg of fuel). We chose this value as a reference.
 
-Finally, Table 2.3 from \cite{Abdelal2013} provides very useful guides to estimate the cost of an initial equipment list. In particular we considered the ADCS system, whose mass is estimated in \autoref{tab:ADCS}.
+Finally, Table 2.3 from \cite{Abdelal2013} provides very useful guides to estimate the cost of an initial equipment list. In particular we considered the \gls{adcs} system, whose mass is estimated in \autoref{tab:ADCS}.
 
 \begin{table}[ht]
 	\centering
@@ -230,14 +229,14 @@ Finally, Table 2.3 from \cite{Abdelal2013} provides very useful guides to estima
 		\midrule
 		Star sensor & 1 & 4\\
 		Angular velocity meter "Gyro" & 4 & 1\\
-		Interface unit for each gyro & 4 & 0.92\\
-		Magnetometer & 1 & 1.5\\
-		Magnetorquer & 3 & 0.38\\
-		Reaction wheel & 4 & 3.3\\
+		Interface unit for each gyro & 4 & 0,92\\
+		Magnetometer & 1 & 1,5\\
+		Magnetorquer & 3 & 0,38\\
+		Reaction wheel & 4 & 3,3\\
 		\midrule
-		Total mass = & & 27.52\\
+		Total mass = & & 27,52\\
 		\bottomrule
 	\end{tabular}
-	\caption{Mass calculation for ADCS subsystem}
+	\caption{Mass calculation for \gls{adcs} subsystem}
 	\label{tab:ADCS}
 \end{table}

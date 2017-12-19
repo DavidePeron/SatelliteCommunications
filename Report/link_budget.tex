@@ -1,6 +1,6 @@
-In this section, the Link Budget for the Forward Path is computed.
+In this section there is a description of the Link budget's computation for the Forward Path.
 
-In the first part, the parameters used in the calculation are presented and discussed, then is calculated the Link Budget for the Uplink (\gls{gs} to Satellite), the Downlink (Satellite to the user) and the overall one.
+In the first part, the parameters used in the calculation are presented and discussed, then the Link Budget for the Uplink (\gls{gs} to Satellite), the Downlink (Satellite to the user) and the overall one are computed.
 \subsection{Parameters setting and estimation}
 	\subsubsection{Antenna Parameters}
 		To compute the link budget we need the parameters of Satellite, Ground Station and User antennas. These are taken from \cite{Ippolito17} and reported in \autoref{tab:antenna_param}.
@@ -24,7 +24,7 @@ In the first part, the parameters used in the calculation are presented and disc
 		\end{table}
 
 		$t_A^{SAT}$ is set to $290K$ since satellite receiver antenna \textit{sees} the full thermal radiation of the Earth, $t_A^{US}$ is set to $80K$ since typical values for a Ku-Band receiver antenna in the Downlink are between $60K$ and $80K$, and $80K$ is the value that most decrease the Link Budget.
-		All the antenna's efficiencies are set to $0.6$, since typical values are between $0.6$ and $0.75$, so the worst case has been taken.
+		All the antenna's efficiencies are set to $0.6$, since typical values are between $0.6$ and $0.75$, so the worst case was taken.
 
 		Knowing the diameter of the antenna reflector, its efficiency and the wavelength of the communication, the gain of each antenna can be computed as in \autoref{eq:gain}.
 
@@ -71,9 +71,7 @@ In the first part, the parameters used in the calculation are presented and disc
 			\caption{Constant losses}
 			\label{tab:constant_losses}
 		\end{table}
-		Losses due to rain $L_{rain}$ and the Path Loss $L_{pl}$ depends on the position of the satellite and on the carrier frequency.
-
-		For the GS we calculated a rain intensity $R = 11.4919  ~mm/h$, we assumed that the rain is 2km high and calculating the rain attenuation as in \autoref{eq:rain_formula} we obtain the plots in \autoref{fig:rain_up} and \autoref{fig:rain_down}.
+		Losses due to rain $L_{rain}$ and the Path Loss $L_{pl}$ depend on the position of the satellite and on the carrier frequency. For the GS we calculate a rain intensity equal to $R = 11.4919  ~mm/h$, we assumed that the rain origin is 2km high and calculating the rain attenuation as in \autoref{eq:rain_formula} we obtain the plots in \autoref{fig:rain_up} and \autoref{fig:rain_down}.
 
 		\begin{equation}\label{eq:rain_formula}
 			L_{rain} = kR^\alpha L_sr_p
@@ -105,13 +103,13 @@ In the first part, the parameters used in the calculation are presented and disc
 		\end{equation}
 		where $f$ is the carrier frequency in Uplink or in Downlink and $\theta$ is the elevation angle.
 
-		The path loss also depends on the position of the satellite and is calculated with the formula in \autoref{eq:path_loss}, where $r$ is the distance between the satellite and the \gls{gs} or the user, taking in account the altitude of the latter, and $\lambda$ is the wavelength of the communication.
+		The path loss also depends on the position of the satellite and is calculated with the formula in \autoref{eq:path_loss}, where $r$ is the distance between the satellite and the \gls{gs} or the user, taking into account the altitude of the latter, and $\lambda$ is the wavelength of the communication.
 
 		\begin{equation}\label{eq:path_loss}
 			L_{PL} = 20log\bigg(\frac{2\pi r}{\lambda}\bigg) ~dB
 		\end{equation}
 
-		Using \autoref{eq:path_loss} in each istant of the simulation, we obtain the plots in \autoref{fig:up_pathloss} and \autoref{fig:down_pathloss}.
+		Using \autoref{eq:path_loss} in each instant of the simulation, we obtain the plots in \autoref{fig:up_pathloss} and \autoref{fig:down_pathloss}.
 
 		\begin{figure}[ht]
 			\begin{minipage}{.5\textwidth}
@@ -128,12 +126,11 @@ In the first part, the parameters used in the calculation are presented and disc
 			\end{minipage}
 		\end{figure}
 	\subsubsection{Effective Isotropic Radiated Power(EIRP)}
-	To calculate \gls{eirp} we have to compute firstly the power that each antenna has to transmit $p_{tx}$.
-	The power that the antenna has to transmit is calculated as in \autoref{eq:power_tx}, using the parameters yet defined.
+	To calculate \gls{eirp} first we have to compute the power that each antenna has to transmit $p_{tx}$, whose calculation is showed in \autoref{eq:power_tx} and uses the parameters yet defined.
 	\begin{equation}\label{eq:power_tx}
 		p_{tx} = [p_{HPA}]_{dB} - l_{mc} - l_{ftx}
 	\end{equation}
-	Then the \gls{eirp} is calculated for Uplink and Downlink with the formula in \autoref{eq:eirp}.
+	Secondly, the \gls{eirp} is calculated for Uplink and Downlink with the formula in \autoref{eq:eirp}.
 	\begin{equation}\label{eq:eirp}
 		EIRP = G_{tx} + p_{tx}
 	\end{equation}
@@ -166,15 +163,15 @@ In the first part, the parameters used in the calculation are presented and disc
 	\end{split}
 	\label{eq:down_link}
 	\end{equation}
-	In that equation $EIRP_{down}$ is the \gls{eirp} trasmitted by the gateway and $(G/T)_{sat}$ is the \textit{Gain-over-Temperature} ratio of the user. $k$ and $B_{IF}$ remain the same values we also used for the Uplink link budget, while $L_D$ now represents the losses in the downlink segment.
+	In the previous equation $EIRP_{down}$ is the \gls{eirp} transmitted by the gateway and $(G/T)_{sat}$ is the \textit{Gain-over-Temperature} ratio of the user. $k$ and $B_{IF}$ remain the same values we also used for the Uplink link budget, while $L_D$ now represents the losses in the downlink segment.
 
-	$(G/T)_{user}$ is computed as the difference (in dB) between the gain of the receiving antenna and the ground station system temperature $T_{gs}$, as it was for the Uplink case, but this time the Friis formula involves a different antenna temperature. In fact now we are dealing with the user station antenna and this is the reason of the element $T_A^{USER}$ in \autoref{eq:friis}. The formula brings to a user station temperature value of $T_{gs} = 523.94 K$ and a corresponding value for the user figure of merit of $(G/T)_{user} = 11.93 dB/K$.
+	$(G/T)_{user}$ is computed as the difference (in dB) between the gain of the receiving antenna and the ground station system temperature $T_{gs}$, as it was for the Uplink case, but this time the Friis formula involves a different antenna temperature. In fact, now we are dealing with the user station antenna and this is the reason for the element $T_A^{USER}$ in \autoref{eq:friis}. The formula brings to a user station temperature value of $T_{gs} = 523.94 K$ and a corresponding value for the user figure of merit of $(G/T)_{user} = 11.93 dB/K$.
 
 	\begin{equation}\label{eq:friis}
 		T_{gs} = T_A^{USER} + t_{LNA} + \frac{T_{DC}}{G_{LNA}}
 	\end{equation}
 \subsection{Overall Link Budget}
-Once we calculate the Uplink link budget and the Downlink one, we have to put them together to find the overall link budget with the formula in \autoref{eq:link_budget_formula}, where $C/IM$ is the \textit{carrier-to-intermodulation} noise and in this project is put to $23dB$.
+Once we calculate the Uplink and the Downlink link budget, we have to put them together to find the overall link budget with the formula in \autoref{eq:link_budget_formula}, where $C/IM$ is the \textit{carrier-to-intermodulation} noise and in this project is set to $23dB$.
 
 \begin{equation}\label{eq:link_budget_formula}
 	\bigg(\frac{C}{N}\bigg)_{TOT} = \bigg[\bigg(\frac{C}{N}\bigg)^{-1}_U + \bigg(\frac{C}{N}\bigg)^{-1}_D + \bigg(\frac{C}{IM}\bigg)^{-1}\bigg]^{-1}
@@ -182,7 +179,7 @@ Once we calculate the Uplink link budget and the Downlink one, we have to put th
 
 The plots of the Link Budget in function of the time (in the simulation) are in	\autoref{fig:CN_rain} and \autoref{fig:CN_no_rain}.
 
-To ensure a good communication, the $E_s/N_0$ required by the modulation has to be lower then the actual link budget, so we define a quantity called \textit{Link Margin}, defined as in \autoref{eq:link_margin}, that has to be greater than 0. The $E_s/N_0$ required by a 16APSK 8/15-L is $6.55dB$, as stated in \cite{dvbs2x}.
+To ensure a good communication, the $E_s/N_0$ required by the modulation has to be lower than the actual link budget, (in our case the $E_s/N_0$ required by a 16APSK 8/15-L is $6.55dB$, as stated in \cite{dvbs2x}) so we define a quantity called \textit{Link Margin}, defined as in \autoref{eq:link_margin}, that has to be greater than 0. 
 
 The plots of the Link Budget in function of the time are in	\autoref{fig:lm_rain} and \autoref{fig:lm_no_rain}.
 

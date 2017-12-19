@@ -26,11 +26,6 @@ B.~M. Maral~Gérard, \emph{{Satellite communications systems. Systems,
   techniques and technologies}}.\hskip 1em plus 0.5em minus 0.4em\relax Wiley,
   2009.
 
-\bibitem{Ippolito17}
-L.~Ippolito, \emph{{Satellite communications systems engineering: atmospheric
-  effects, satellite link design and system performance}}.\hskip 1em plus 0.5em
-  minus 0.4em\relax Wiley, 2008.
-
 \bibitem{Miguel17}
 M.~Calvo, ``Exercise on energy subsystem,'' 2017.
 
@@ -50,6 +45,17 @@ G.~F. Abdelal, N.~Abuelfoutouh, and A.~H. Gad, \emph{{Finite Element Analysis
   for Satellite Structures}}, 2013. [Online]. Available:
   \url{http://link.springer.com/10.1007/978-1-4471-4637-7}
 \BIBentrySTDinterwordspacing
+
+\bibitem{Ippolito17}
+L.~Ippolito, \emph{{Satellite communications systems engineering: atmospheric
+  effects, satellite link design and system performance}}.\hskip 1em plus 0.5em
+  minus 0.4em\relax Wiley, 2008.
+
+\bibitem{dvbs2x}
+\emph{Digital Video Broadcasting (DVB); Second generation framing structure,
+  channel coding and modulation systems for Broadcasting, Interactive Services,
+  News Gathering and other broadband satellite applications}, ETSI EN 302
+  307-2, 10 2014.
 
 \bibitem{spacex}
 \BIBentryALTinterwordspacing

@@ -1,5 +1,4 @@
-Our simulator is organized in a main file and several other files that serves as functions for the main one.
-In the follows a brief explanation of each part of the script is presented. For the sake of simplicity, a one-satellite simulator is taken into account, the extension to a multi-satellite model is explained later.
+Our simulator is organized in a main file and several other files that serves as functions for the main one, in what follows a brief explanation of each part of the script is presented. For the sake of simplicity, a one-satellite simulator is taken into account, the extension to a multi-satellite model is explained later.
 The main file is organized in different sections where external functions are called:
 	\begin{itemize}
 		\item Initialization of all the fixed parameters used in the simulation;
@@ -11,19 +10,18 @@ The main file is organized in different sections where external functions are ca
 		\item link budget estimation.
 	\end{itemize}
 
-In case of more than one satellite, each one has to cover the same area of the Earth but in different moments, and since the Earth rotates, a simple delay in the same orbital plane is not enough.
+In case of more than one satellite, each one has to cover the same area of the Earth but in different moments and, since the Earth rotates, a simple delay in the same orbital plane is not enough.
 
-The solution we found for this problem is a delay in the time (with the same trajectory) and a different \gls{raan} for each satellite.
-The \gls{raan}'s offset angle of each satellite is given by the orbital period ($T$) of the orbit.
-\textit{Tundra} is a Geosynchronous Orbit, so its orbital period is the same of the Earth, and the following formulas have been used:
+The solution we found for this problem is a time delay (with the same trajectory) and a different \gls{raan} for each satellite, whose offset angle is proportional to the portion of period time ($T$) that separates the passage of two different satellite on the same point.
+\textit{Tundra} is a Geosynchronous Orbit, so its orbital period is the same of the Earth, and the following formulas were used:
 
 \begin{equation}
 	d^{time}(s) = \frac{T}{n} \qquad d^{raan}(deg) = \frac{360}{n}
 \end{equation}
 
-Where $T$ is the orbital period and $n$ is the number of satellites simulated.
+Where $T$ is the orbital period and $n$ is the number of satellites in the simulation.
 
-In case of a \textit{Molniya} orbit, the orbital period is an half the revolution period of the Earth, so the \gls{raan} has to be an half of the one calculated for \textit{Tundra}. In formulas:
+In case of a \textit{Molniya} orbit, the orbital period is half the revolution period of the Earth, so the \gls{raan} has to be half of the one calculated for \textit{Tundra}. In formulas:
 
 \begin{equation}
 	d^{time}(s) = \frac{T}{n} \qquad d^{raan}(deg) = \frac{360}{2n} = \frac{180}{n}

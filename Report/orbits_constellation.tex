@@ -17,12 +17,11 @@ The parameters of the orbits analysed in the simulator are presented in \autoref
 	\label{tab:orbits}
 \end{table}
 
-In the simulation, two satellite equally spaced are used: when the first is in the apogee, the other is in the perigee.
-As is shown in \autoref{fig:molniya} and \autoref{fig:tundra}, each satellite has its own orbital plane, but the ground track for the different satellite is the same.
-In specific, the \gls{raan}'s offset between satellites is $90^\circ$ for Molniya and $180^\circ$ for Tundra.
+In the simulation, two equally spaced satellites were used: when the first one is in the apogee, the other one is in the perigee and moreover the \gls{raan}'s offset between satellites is $90^\circ$ for Molniya and $180^\circ$ for Tundra.
+As it is shown in \autoref{fig:molniya} and \autoref{fig:tundra}, each satellite has its own orbital plane, but the resulting ground track for the different satellites is the same.
 
-Since Molniya's period is an half of the revolution period of the Earth, two revolutions of the satellites around the Earth have been simulated, to make the understanding of the figures easier.
-In case of Tundra, one revolution around the Earth is enough since this orbit is Geosynchronous.
+Since Molniya's period is half of the revolution period of the Earth, we simulated two revolutions of the satellites around the Earth so to make it easier to understand the figures.
+For Tundra, on the other hand, one revolution around the Earth is enough since this orbit is Geosynchronous.
 
 \begin{figure}[!htbp]
 	\begin{subfigure}{.5\textwidth}
@@ -58,7 +57,7 @@ In case of Tundra, one revolution around the Earth is enough since this orbit is
 	\label{fig:tundra}
 \end{figure}
 
-Plotting the azimuth and the elevation for different position in the service area (\autoref{fig:elevation_multi}), the result is that the elevation with a Molniya Orbit is, on average, higher. In same cases, the advantage of Molniya is not so visible from the elevation plots, but calculating the Link Budget, it gives higher values for Molniya than for Tundra.
+Plotting the azimuth and the elevation for different positions in the service area (\autoref{fig:elevation_multi}), the result is that the elevation with a Molniya Orbit is higher, on average. In some cases, the advantage of Molniya is not so visible from the elevation plots, but in the end the Link Budget gives higher values for Molniya than for Tundra.
 
 For all these reasons, we chose to adopt a Molniya orbit with the parameters set as in \autoref{tab:orbits} for our system.
 
