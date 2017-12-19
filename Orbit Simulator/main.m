@@ -205,7 +205,7 @@ for k = 1:length(lat_gs)
     
     subplot(2,2,3);
     plot(t,CNtot(k,:))
-    title('Time VS Total SNR')
+    title('Time VS Total SNR without rain')
     xlabel('Time (s)')
     ylabel('Total SNR (dB)')
     grid on;

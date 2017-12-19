@@ -99,8 +99,7 @@ function [CNtot, link_margin, CNtot_rain, link_margin_rain]= link_budget(r,t,lam
     
     lambda_link_dw = c/frequency_downlink; %Downlink wavelength
     G__tx_sat = 10*log10(efficiency*(pi*diameter_sat/lambda_link_dw)^2); %Gain of the Satellite antenna in tx [dBi]
-    p_t_down = 10*log10(p_HPA_down) - l_mc - l_ftx; %Total power for a transponder
-    p_tx_down = p_t_down + 10*log10(12); %Total power tx by the antenna (p_t x the n of transponders)
+    p_tx_down = 10*log10(p_HPA_down) - l_mc - l_ftx; %Total power tx by the antenna (p_t x the n of transponders)
     EIRP_down = G__tx_sat + p_tx_down; %Gateway EIRP 
     G_user = 10*log10(efficiency*((pi*Diameter_user*frequency_downlink)/c)^2);
     T_system_gs = T_user_antenna + t_lna + t_dc/g_lna;
@@ -117,7 +116,7 @@ function [CNtot, link_margin, CNtot_rain, link_margin_rain]= link_budget(r,t,lam
 
     %% CN_TOT    
     for m = 1:length(t)
-        CNtot(m) = -20*log10(1/(10^(CN_uplink(m)/20)) + 1/(10^(CN_downlink(m)/20) + 1/(10^(carr_to_inter_noise/20))));
+        CNtot(m) = -10*log10(1/(10^(CN_uplink(m)/10)) + 1/(10^(CN_downlink(m)/10) + 1/(10^(carr_to_inter_noise/10))));
         available_EsNo(m) = CNtot(m) - add_deg - imp_margin;
         link_margin(m) = available_EsNo(m) - required_EsNo;
         CNtot_rain(m) = -20*log10(1/(10^(CN_uplink_rain(m)/20)) + 1/(10^(CN_downlink_rain(m)/20) + 1/(10^(carr_to_inter_noise/20))));
